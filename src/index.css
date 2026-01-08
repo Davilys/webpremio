@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 25% 97%;
+    --foreground: 210 50% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 50% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 50% 10%;
+
+    --primary: 199 100% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 199 30% 94%;
+    --secondary-foreground: 199 50% 25%;
+
+    --muted: 199 20% 94%;
+    --muted-foreground: 199 15% 45%;
+
+    --accent: 199 100% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --success: 152 69% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 199 20% 88%;
+    --input: 199 20% 88%;
+    --ring: 199 100% 48%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 210 60% 12%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 199 100% 50%;
+    --sidebar-primary-foreground: 210 60% 10%;
+    --sidebar-accent: 210 50% 20%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 50% 18%;
+    --sidebar-ring: 199 100% 50%;
+
+    /* WebMarcas gradients - Cyan/Blue */
+    --gradient-primary: linear-gradient(135deg, hsl(199, 100%, 50%) 0%, hsl(199, 100%, 40%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(199, 100%, 45%) 0%, hsl(210, 100%, 40%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(199, 30%, 98%) 100%);
+    --gradient-sidebar: linear-gradient(180deg, hsl(210, 60%, 12%) 0%, hsl(210, 70%, 8%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(210, 60%, 8%) 0%, hsl(210, 50%, 15%) 50%, hsl(199, 80%, 20%) 100%);
+  }
+
+  .dark {
+    --background: 210 60% 6%;
+    --foreground: 0 0% 95%;
+
+    --card: 210 50% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 210 50% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 199 100% 50%;
+    --primary-foreground: 210 60% 10%;
+
+    --secondary: 210 30% 18%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 210 25% 16%;
+    --muted-foreground: 210 15% 55%;
+
+    --accent: 199 100% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 100%;
+
+    --success: 152 69% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 210 30% 20%;
+    --input: 210 30% 20%;
+    --ring: 199 100% 50%;
+
+    --sidebar-background: 210 70% 6%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 199 100% 50%;
+    --sidebar-primary-foreground: 210 60% 10%;
+    --sidebar-accent: 210 50% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 210 50% 14%;
+    --sidebar-ring: 199 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-accent {
+    background: var(--gradient-accent);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .gradient-sidebar {
+    background: var(--gradient-sidebar);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-lg bg-card/80 border border-border/50;
+  }
+
+  .card-shadow {
+    box-shadow: 0 4px 24px -4px hsl(210 60% 15% / 0.08), 
+                0 2px 8px -2px hsl(210 60% 15% / 0.04);
+  }
+
+  .card-shadow-hover {
+    box-shadow: 0 8px 32px -4px hsl(210 60% 15% / 0.12), 
+                0 4px 12px -2px hsl(210 60% 15% / 0.06);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted/50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30 transition-colors;
+}

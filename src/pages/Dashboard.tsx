@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -6,7 +6,14 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import BonusPanelRegistro from '@/components/dashboard/BonusPanelRegistro';
 import BonusPanelPublicacao from '@/components/dashboard/BonusPanelPublicacao';
 import MonthSelector from '@/components/dashboard/MonthSelector';
-import { Bookmark, FileText, Award, TrendingUp, Sparkles } from 'lucide-react';
+import { Bookmark, FileText, Award, TrendingUp, Sparkles, X } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { 
@@ -36,6 +43,7 @@ const motivationalQuotes = [
 const Dashboard: React.FC = () => {
   const { profile, isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showWelcomePopup, setShowWelcomePopup] = useState(true);
 
   // Seleciona uma frase motivacional aleatória a cada visita
   const motivationalQuote = useMemo(() => {
@@ -79,6 +87,33 @@ const Dashboard: React.FC = () => {
 
   return (
     <DashboardLayout>
+      {/* Welcome Popup */}
+      <Dialog open={showWelcomePopup} onOpenChange={setShowWelcomePopup}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-2xl">
+              <span>Olá, {profile?.nome?.split(' ')[0] || 'Usuário'}! 👋</span>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4 py-4">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <Sparkles className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <p className="text-center text-lg font-medium text-foreground">
+              {motivationalQuote}
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <Button 
+              onClick={() => setShowWelcomePopup(false)}
+              className="w-full sm:w-auto"
+            >
+              Vamos lá! 🚀
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -86,12 +121,6 @@ const Dashboard: React.FC = () => {
             <h1 className="text-3xl font-bold text-foreground">
               Olá, {profile?.nome?.split(' ')[0] || 'Usuário'}! 👋
             </h1>
-            <div className="flex items-center gap-2 mt-2 p-3 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-primary/20">
-              <Sparkles className="w-5 h-5 text-primary flex-shrink-0" />
-              <p className="text-sm font-medium text-foreground italic">
-                {motivationalQuote}
-              </p>
-            </div>
           </div>
           <MonthSelector currentDate={selectedDate} onChange={setSelectedDate} />
         </div>

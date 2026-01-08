@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -6,7 +6,7 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import BonusPanelRegistro from '@/components/dashboard/BonusPanelRegistro';
 import BonusPanelPublicacao from '@/components/dashboard/BonusPanelPublicacao';
 import MonthSelector from '@/components/dashboard/MonthSelector';
-import { Bookmark, FileText, Award, TrendingUp } from 'lucide-react';
+import { Bookmark, FileText, Award, TrendingUp, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { 
@@ -15,9 +15,33 @@ import {
   calculatePublicacaoBonus 
 } from '@/types/database';
 
+const motivationalQuotes = [
+  "Cada registro que você faz é um passo rumo ao sucesso! 🚀",
+  "Seu esforço de hoje constrói sua vitória de amanhã! 💪",
+  "Você está fazendo a diferença, continue assim! ⭐",
+  "Grandes conquistas começam com pequenas ações diárias! 🏆",
+  "Sua dedicação é inspiradora, não desista! 🔥",
+  "O sucesso é a soma de pequenos esforços repetidos dia após dia! 📈",
+  "Você tem o poder de transformar metas em realidade! ✨",
+  "Cada novo registro é uma semente de prosperidade plantada! 🌱",
+  "Seu talento está fazendo a diferença na equipe! 🌟",
+  "Acredite no seu potencial, você é capaz! 💫",
+  "A persistência é o caminho para a excelência! 🎯",
+  "Você está mais perto do seu objetivo do que imagina! 🏅",
+  "Sua energia positiva contagia toda a equipe! ☀️",
+  "Hoje é um novo dia para bater recordes! 🎖️",
+  "Foco, força e fé: você vai longe! 💎",
+];
+
 const Dashboard: React.FC = () => {
   const { profile, isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // Seleciona uma frase motivacional aleatória a cada visita
+  const motivationalQuote = useMemo(() => {
+    const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+    return motivationalQuotes[randomIndex];
+  }, []);
 
   const { registrations, loading, getQuantityByPayment } = useRegistrations(selectedDate);
 
@@ -62,11 +86,12 @@ const Dashboard: React.FC = () => {
             <h1 className="text-3xl font-bold text-foreground">
               Olá, {profile?.nome?.split(' ')[0] || 'Usuário'}! 👋
             </h1>
-            <p className="text-muted-foreground mt-1">
-              {isAdmin
-                ? 'Visão geral do sistema de premiação'
-                : 'Acompanhe sua premiação mensal'}
-            </p>
+            <div className="flex items-center gap-2 mt-2 p-3 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-primary/20">
+              <Sparkles className="w-5 h-5 text-primary flex-shrink-0" />
+              <p className="text-sm font-medium text-foreground italic">
+                {motivationalQuote}
+              </p>
+            </div>
           </div>
           <MonthSelector currentDate={selectedDate} onChange={setSelectedDate} />
         </div>

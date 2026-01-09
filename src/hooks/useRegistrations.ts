@@ -95,7 +95,16 @@ export const useRegistrations = (
       .filter((r) => r.forma_pagamento === 'parcelado')
       .reduce((sum, r) => sum + r.quantidade, 0);
     
-    return { avista, parcelado, total: avista + parcelado };
+    const promocao = filtered
+      .filter((r) => r.forma_pagamento === 'promocao')
+      .reduce((sum, r) => sum + r.quantidade, 0);
+    
+    // Total para meta = avista + parcelado (promocao não conta para meta)
+    const totalParaMeta = avista + parcelado;
+    // Total geral = todos os tipos
+    const total = avista + parcelado + promocao;
+    
+    return { avista, parcelado, promocao, totalParaMeta, total };
   };
 
   return {

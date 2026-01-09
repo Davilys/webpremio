@@ -1,11 +1,12 @@
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, XCircle, Target, DollarSign, CreditCard, Banknote } from 'lucide-react';
+import { CheckCircle2, XCircle, Target, DollarSign, CreditCard, Banknote, Tag } from 'lucide-react';
 import { 
   BONUS_GOAL, 
-  BONUS_VALUE_STANDARD, 
-  BONUS_VALUE_AVISTA_AFTER_GOAL,
+  BONUS_VALUE_REGISTRO, 
+  BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL,
+  BONUS_VALUE_PROMOCAO,
   calculateRegistroBonus 
 } from '@/types/database';
 
@@ -14,6 +15,7 @@ interface BonusPanelRegistroProps {
   icon: React.ReactNode;
   avistaQuantity: number;
   parceladoQuantity: number;
+  promocaoQuantity?: number;
   monthYear: string;
   className?: string;
 }
@@ -23,12 +25,14 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
   icon,
   avistaQuantity = 0,
   parceladoQuantity = 0,
+  promocaoQuantity = 0,
   monthYear,
   className,
 }, ref) => {
-  const totalQuantity = avistaQuantity + parceladoQuantity;
-  const bonusData = calculateRegistroBonus(totalQuantity, avistaQuantity, parceladoQuantity);
-  const progress = Math.min((totalQuantity / BONUS_GOAL) * 100, 100);
+  // Total para meta = apenas à vista + parcelado
+  const totalParaMeta = avistaQuantity + parceladoQuantity;
+  const bonusData = calculateRegistroBonus(totalParaMeta, avistaQuantity, parceladoQuantity, promocaoQuantity);
+  const progress = Math.min((totalParaMeta / BONUS_GOAL) * 100, 100);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -75,7 +79,7 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
               Progresso da Meta
             </span>
             <span className="text-sm font-bold">
-              {totalQuantity} / {BONUS_GOAL}
+              {totalParaMeta} / {BONUS_GOAL}
             </span>
           </div>
           <Progress 
@@ -87,31 +91,44 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
           />
         </div>
 
-        {/* Breakdown by payment method */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 rounded-lg bg-secondary/50">
+        {/* Breakdown by payment method - 3 columns */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="p-3 rounded-lg bg-secondary/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Banknote className="w-4 h-4" />
               <span className="text-xs font-medium">À Vista</span>
             </div>
             <p className="text-lg font-bold text-foreground">
-              {avistaQuantity} <span className="text-sm font-normal text-muted-foreground">registros</span>
+              {avistaQuantity}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              {formatCurrency(bonusData.goalReached ? BONUS_VALUE_AVISTA_AFTER_GOAL : BONUS_VALUE_STANDARD)}/un
+              {formatCurrency(bonusData.goalReached ? BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL : BONUS_VALUE_REGISTRO)}/un
             </p>
           </div>
 
-          <div className="p-4 rounded-lg bg-secondary/50">
+          <div className="p-3 rounded-lg bg-secondary/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <CreditCard className="w-4 h-4" />
               <span className="text-xs font-medium">Parcelado</span>
             </div>
             <p className="text-lg font-bold text-foreground">
-              {parceladoQuantity} <span className="text-sm font-normal text-muted-foreground">registros</span>
+              {parceladoQuantity}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              {formatCurrency(BONUS_VALUE_STANDARD)}/un <span className="text-[10px]">(fixo)</span>
+              {formatCurrency(BONUS_VALUE_REGISTRO)}/un
+            </p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+            <div className="flex items-center gap-2 text-amber-500 mb-1">
+              <Tag className="w-4 h-4" />
+              <span className="text-xs font-medium">Personalizado</span>
+            </div>
+            <p className="text-lg font-bold text-amber-500">
+              {promocaoQuantity}
+            </p>
+            <p className="text-xs text-amber-500/70 mt-1">
+              {formatCurrency(BONUS_VALUE_PROMOCAO)}/un
             </p>
           </div>
         </div>
@@ -146,16 +163,24 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
         <div className="space-y-2 p-4 rounded-lg bg-muted/30">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">
-              {avistaQuantity} à vista × {formatCurrency(bonusData.goalReached ? BONUS_VALUE_AVISTA_AFTER_GOAL : BONUS_VALUE_STANDARD)}
+              {avistaQuantity} à vista × {formatCurrency(bonusData.goalReached ? BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL : BONUS_VALUE_REGISTRO)}
             </span>
             <span className="font-medium">{formatCurrency(bonusData.avistaValue)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">
-              {parceladoQuantity} parcelado × {formatCurrency(BONUS_VALUE_STANDARD)}
+              {parceladoQuantity} parcelado × {formatCurrency(BONUS_VALUE_REGISTRO)}
             </span>
             <span className="font-medium">{formatCurrency(bonusData.parceladoValue)}</span>
           </div>
+          {promocaoQuantity > 0 && (
+            <div className="flex justify-between text-sm border-t border-border/50 pt-2 mt-2">
+              <span className="text-amber-500">
+                {promocaoQuantity} personalizado × {formatCurrency(BONUS_VALUE_PROMOCAO)}
+              </span>
+              <span className="font-medium text-amber-500">{formatCurrency(bonusData.promocaoValue)}</span>
+            </div>
+          )}
         </div>
 
         {/* Total */}

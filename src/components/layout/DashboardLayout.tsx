@@ -15,6 +15,17 @@ import {
   ChevronRight,
   BarChart3,
   PlusCircle,
+  Search,
+  Settings,
+  Moon,
+  ChevronsRight,
+  MessageSquare,
+  Link2,
+  Bot,
+  Zap,
+  Send,
+  Calendar,
+  Bell,
 } from 'lucide-react';
 
 interface NavItem {
@@ -22,6 +33,7 @@ interface NavItem {
   href: string;
   icon: React.ReactNode;
   adminOnly?: boolean;
+  badge?: string;
 }
 
 const navItems: NavItem[] = [
@@ -83,132 +95,233 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-foreground/20 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
+      {/* Sidebar - Zionic style with light/neutral colors like print 5 */}
       <aside
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-64 bg-sidebar transform transition-transform duration-300 ease-out lg:translate-x-0",
+          "fixed lg:static inset-y-0 left-0 z-50 w-80 bg-card border-r border-border transform transition-transform duration-300 ease-out lg:translate-x-0 flex flex-col",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="p-5 border-b border-sidebar-border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full bg-sidebar-primary flex items-center justify-center">
-                  <span className="text-sidebar-primary-foreground font-bold text-sm">W</span>
-                </div>
-                <div>
-                  <h1 className="font-semibold text-sidebar-foreground text-sm tracking-tight">WebMarcas</h1>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                    <p className="text-[11px] text-sidebar-foreground/50">Online</p>
-                  </div>
-                </div>
+        {/* Logo Section */}
+        <div className="p-6 border-b border-border">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-foreground flex items-center justify-center">
+                <span className="text-background text-xl">🎯</span>
               </div>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground/60"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div>
+                <h1 className="font-bold text-foreground text-lg tracking-tight">WEBMARCAS</h1>
+                <p className="text-xs text-muted-foreground">Sistema de Premiação</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 rounded-lg hover:bg-secondary text-muted-foreground"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Card - Like Zionic Credits */}
+        <div className="px-4 py-4">
+          <div className="bg-secondary/50 rounded-2xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-accent" />
+                </div>
+                <span className="text-sm font-medium text-foreground">Créditos</span>
+              </div>
+              <span className="text-lg font-bold text-foreground">∞</span>
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-1.5">
+                <MessageSquare className="w-4 h-4 text-success" />
+                <span className="text-muted-foreground">REG</span>
+                <span className="font-medium text-foreground">∞</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-success" />
+              </div>
+              <div className="flex items-center gap-1.5">
+                <FileText className="w-4 h-4 text-accent" />
+                <span className="text-muted-foreground">PUB</span>
+                <span className="font-medium text-foreground">∞</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-success" />
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 p-3 overflow-y-auto">
-            <p className="px-3 py-2 text-[10px] font-semibold text-sidebar-foreground/30 uppercase tracking-wider">
-              Menu
-            </p>
-            <div className="space-y-0.5">
-              {filteredNavItems.map((item) => {
-                const isActive = location.pathname === item.href;
-                return (
+        {/* Search */}
+        <div className="px-4 py-2">
+          <div className="flex items-center gap-3 px-4 py-3 bg-secondary/50 rounded-xl text-muted-foreground">
+            <Search className="w-4 h-4" />
+            <span className="text-sm">Buscar... (⌘K)</span>
+          </div>
+        </div>
+
+        {/* User Selector */}
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between px-4 py-3 bg-secondary/30 rounded-xl">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold text-sm">
+                {profile?.nome?.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <span className="font-medium text-foreground">{profile?.nome?.split(' ')[0] || 'Usuário'}</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground rotate-90" />
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-4 overflow-y-auto">
+          <div className="space-y-1">
+            {filteredNavItems.map((item, index) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <motion.div
+                  key={item.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
                   <Link
-                    key={item.href}
                     to={item.href}
                     onClick={() => setSidebarOpen(false)}
                     className={cn(
-                      "flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-150 group relative text-sm",
+                      "flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 group relative",
                       isActive
-                        ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
-                        : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                        ? "bg-accent/10 text-accent"
+                        : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
                     )}
                   >
-                    {item.icon}
-                    <span>{item.label}</span>
+                    {item.badge && (
+                      <div className="absolute -left-1 -top-1 px-1.5 py-0.5 bg-destructive text-destructive-foreground rounded-full text-[10px] font-bold">
+                        {item.badge}
+                      </div>
+                    )}
+                    <span className={cn(
+                      "transition-colors",
+                      isActive ? "text-accent" : "text-muted-foreground group-hover:text-foreground"
+                    )}>
+                      {item.icon}
+                    </span>
+                    <div className="flex-1">
+                      <span className="font-medium">{item.label}</span>
+                      {item.label === 'Dashboard' && (
+                        <p className="text-xs text-muted-foreground">Visão geral</p>
+                      )}
+                    </div>
                     {isActive && (
-                      <ChevronRight className="w-4 h-4 ml-auto" />
+                      <ChevronRight className="w-4 h-4" />
                     )}
                   </Link>
-                );
-              })}
-            </div>
-          </nav>
+                </motion.div>
+              );
+            })}
+          </div>
+        </nav>
 
+        {/* Bottom section */}
+        <div className="p-4 border-t border-border">
+          <div className="flex items-center justify-between mb-4">
+            <button className="p-2 rounded-lg hover:bg-secondary text-muted-foreground">
+              <Settings className="w-5 h-5" />
+            </button>
+            <button className="p-2 rounded-lg hover:bg-secondary text-muted-foreground">
+              <Moon className="w-5 h-5" />
+            </button>
+            <button className="p-2 rounded-lg hover:bg-secondary text-muted-foreground">
+              <ChevronsRight className="w-5 h-5" />
+            </button>
+          </div>
+          
           {/* User info */}
-          <div className="p-3 border-t border-sidebar-border">
-            <div className="p-3 rounded-lg bg-sidebar-accent">
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-9 h-9 rounded-full bg-sidebar-primary flex items-center justify-center">
-                  <span className="text-sm font-semibold text-sidebar-primary-foreground">
-                    {profile?.nome?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-sidebar-foreground truncate">
-                    {profile?.nome || 'Usuário'}
-                  </p>
-                  <p className="text-[11px] text-sidebar-foreground/50 capitalize">
-                    {role === 'admin' ? 'Administrador' : 'Funcionário'}
-                  </p>
-                </div>
+          <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold">
+                {profile?.nome?.charAt(0).toUpperCase() || 'U'}
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-sidebar-foreground/60 hover:text-red-400 hover:bg-red-500/10 h-8 text-sm"
-                onClick={handleSignOut}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sair
-              </Button>
+              <div>
+                <p className="font-medium text-foreground text-sm">{profile?.nome || 'Usuário'}</p>
+                <p className="text-xs text-muted-foreground capitalize">
+                  {role === 'admin' ? 'Admin' : 'Funcionário'}
+                </p>
+              </div>
             </div>
+            <button
+              onClick={handleSignOut}
+              className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </aside>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile header */}
-        <header className="lg:hidden sticky top-0 z-30 bg-background border-b border-border px-4 h-14 flex items-center">
-          <div className="flex items-center justify-between w-full">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSidebarOpen(true)}
-              className="h-9 w-9"
-            >
-              <Menu className="w-5 h-5" />
-            </Button>
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-foreground flex items-center justify-center">
-                <span className="text-background font-bold text-xs">W</span>
+        {/* Top bar - Zionic style */}
+        <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
+          <div className="flex items-center justify-between px-4 lg:px-8 h-16">
+            {/* Left - Mobile menu + User info */}
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+              
+              <div className="hidden lg:flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold text-sm">
+                  {profile?.nome?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div>
+                  <p className="font-medium text-foreground text-sm">{profile?.nome?.split(' ')[0] || 'Usuário'}</p>
+                  <p className="text-xs text-muted-foreground capitalize">
+                    {role === 'admin' ? 'Administrador' : 'Membro'}
+                  </p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted-foreground rotate-90" />
               </div>
-              <span className="font-semibold text-foreground text-sm">WebMarcas</span>
             </div>
-            <div className="w-9" />
+
+            {/* Right - Search + Actions */}
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-secondary/50 rounded-xl text-muted-foreground text-sm">
+                <Search className="w-4 h-4" />
+                <span>Buscar...</span>
+                <kbd className="px-1.5 py-0.5 bg-background rounded text-xs">⌘K</kbd>
+              </div>
+              
+              <button className="relative p-2 rounded-lg hover:bg-secondary text-muted-foreground">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-success rounded-full" />
+              </button>
+              
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full">
+                <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                <span className="text-xs font-medium text-muted-foreground">Online</span>
+              </div>
+              
+              <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold text-sm">
+                {profile?.nome?.charAt(0).toUpperCase() || 'U'}
+              </div>
+            </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 lg:p-6 overflow-auto">
+        <main className="flex-1 p-4 lg:p-8 overflow-auto bg-background">
           {children}
         </main>
       </div>

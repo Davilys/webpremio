@@ -6,103 +6,60 @@
 
 @layer base {
   :root {
-    /* Zionic-inspired Clean White Theme */
-    --background: 0 0% 99%;
-    --foreground: 224 71% 4%;
+    /* ZIONIC DARK THEME - Exact Colors */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
+    --card: 240 10% 7%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
+    --popover: 240 10% 7%;
+    --popover-foreground: 0 0% 100%;
 
-    /* Primary - Pure Black like Zionic */
-    --primary: 224 71% 4%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary - White */
+    --primary: 0 0% 100%;
+    --primary-foreground: 240 10% 4%;
 
-    /* Secondary - Very light gray */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 224 71% 4%;
+    /* Secondary - Dark gray */
+    --secondary: 240 10% 12%;
+    --secondary-foreground: 0 0% 80%;
 
     /* Muted */
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 240 5% 50%;
 
-    /* Accent - Green like Zionic */
-    --accent: 142 76% 36%;
+    /* Accent - Purple/Violet glow */
+    --accent: 270 80% 60%;
     --accent-foreground: 0 0% 100%;
 
-    /* Status */
-    --destructive: 0 84% 60%;
+    /* Success - Neon Green like Zionic */
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+
+    /* Destructive - Red */
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
 
+    /* Warning */
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    /* Borders */
+    --border: 240 10% 15%;
+    --input: 240 10% 15%;
+    --ring: 270 80% 60%;
 
-    /* Borders - Very subtle */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 224 71% 4%;
+    --radius: 0.75rem;
 
-    --radius: 0.625rem;
-
-    /* Sidebar - Dark */
-    --sidebar-background: 224 71% 4%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 142 76% 36%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 224 50% 12%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 224 50% 12%;
-    --sidebar-ring: 142 76% 36%;
-  }
-
-  .dark {
-    --background: 224 71% 4%;
-    --foreground: 0 0% 98%;
-
-    --card: 224 50% 8%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 224 50% 8%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 100%;
-    --primary-foreground: 224 71% 4%;
-
-    --secondary: 224 50% 12%;
-    --secondary-foreground: 0 0% 90%;
-
-    --muted: 224 50% 12%;
-    --muted-foreground: 220 9% 60%;
-
-    --accent: 142 76% 40%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --warning: 38 92% 55%;
-    --warning-foreground: 0 0% 100%;
-
-    --success: 142 76% 40%;
-    --success-foreground: 0 0% 100%;
-
-    --border: 224 50% 15%;
-    --input: 224 50% 15%;
-    --ring: 142 76% 40%;
-
-    --sidebar-background: 224 71% 3%;
+    /* Sidebar - Extra dark */
+    --sidebar-background: 240 10% 3%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 142 76% 40%;
+    --sidebar-primary: 270 80% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 224 50% 10%;
+    --sidebar-accent: 240 10% 8%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 224 50% 10%;
-    --sidebar-ring: 142 76% 40%;
+    --sidebar-border: 240 10% 10%;
+    --sidebar-ring: 270 80% 60%;
   }
 }
 
@@ -111,71 +68,127 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+  }
+
+  /* Selection */
+  ::selection {
+    background: hsl(var(--accent) / 0.3);
   }
 }
 
 @layer utilities {
-  /* Zionic dotted pattern background */
-  .dotted-pattern {
-    background-image: radial-gradient(circle, hsl(220, 13%, 85%) 1px, transparent 1px);
-    background-size: 20px 20px;
+  /* Zionic Glow Effects */
+  .glow-accent {
+    box-shadow: 0 0 30px -5px hsl(var(--accent) / 0.5);
   }
 
-  /* Shadows - Zionic style (very subtle) */
-  .shadow-soft {
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  .glow-accent-sm {
+    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.3);
   }
 
-  .shadow-card {
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  .glow-success {
+    box-shadow: 0 0 20px -5px hsl(var(--success) / 0.5);
   }
 
-  .shadow-card-hover {
-    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+  .border-glow {
+    border: 1px solid hsl(var(--accent) / 0.3);
+    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.2), inset 0 0 20px -10px hsl(var(--accent) / 0.1);
   }
 
-  .shadow-elevated {
-    box-shadow: 0 20px 40px -10px rgb(0 0 0 / 0.12);
+  .border-glow-success {
+    border: 1px solid hsl(var(--success) / 0.3);
+    box-shadow: 0 0 20px -5px hsl(var(--success) / 0.2);
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(240, 5%, 65%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-accent {
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(270, 90%, 70%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Background animations */
+  .bg-grid {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(circle at center, hsl(0, 0%, 20%) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  .bg-gradient-radial {
+    background: radial-gradient(ellipse at center, hsl(270, 80%, 15%) 0%, hsl(240, 10%, 4%) 70%);
   }
 
   /* Animations */
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
 
-  .animate-slide-up {
-    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .animate-float-delayed {
+    animation: float 6s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
   }
 
   .animate-scale-in {
     animation: scaleIn 0.4s ease-out forwards;
   }
 
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+  .animate-slide-in-right {
+    animation: slideInRight 0.4s ease-out forwards;
   }
 
-  .animate-pulse-dot {
-    animation: pulseDot 2s ease-in-out infinite;
+  .animate-breathing {
+    animation: breathing 4s ease-in-out infinite;
   }
 
-  /* Dashed lines like Zionic */
-  .dashed-line-v {
-    background-image: linear-gradient(to bottom, hsl(220, 13%, 85%) 50%, transparent 50%);
-    background-size: 1px 8px;
-    width: 1px;
+  /* Hover effects */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .dashed-line-h {
-    background-image: linear-gradient(to right, hsl(220, 13%, 85%) 50%, transparent 50%);
-    background-size: 8px 1px;
-    height: 1px;
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -15px hsl(var(--accent) / 0.15);
   }
 
-  /* Hide scrollbar */
+  .hover-glow {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 30px -5px hsl(var(--accent) / 0.4);
+  }
+
+  /* Scrollbar */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -183,37 +196,73 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Glass effect */
+  .glass {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(10px);
+  }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes pulseGlow {
+  0%, 100% { 
+    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.3);
+    opacity: 1;
+  }
+  50% { 
+    box-shadow: 0 0 40px -5px hsl(var(--accent) / 0.5);
+    opacity: 0.8;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+@keyframes breathing {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
 }
 
-/* Scrollbar - Minimal */
+/* Custom scrollbar for webkit */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -221,10 +270,20 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.2);
+  background: hsl(var(--muted));
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* Badge styles for Zionic */
+.badge-online {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50;
+}
+
+.badge-online::before {
+  content: '';
+  @apply w-2 h-2 rounded-full bg-success animate-pulse;
 }

@@ -2,10 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { Suspense, lazy } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -29,6 +30,13 @@ const queryClient = new QueryClient({
   },
 });
 
+const pageTransition = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+  transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] as const }
+};
+
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -43,71 +51,91 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
+const AnimatedPage: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <motion.div
+      initial={pageTransition.initial}
+      animate={pageTransition.animate}
+      exit={pageTransition.exit}
+      transition={pageTransition.transition}
+      className="w-full h-full"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <ErrorBoundary>
       <Suspense fallback={<LoadingSpinner fullScreen />}>
-        {children}
+        <AnimatedPage>
+          {children}
+        </AnimatedPage>
       </Suspense>
     </ErrorBoundary>
   );
 };
 
 const AppRoutes = () => {
+  const location = useLocation();
+
   return (
-    <Routes>
-      <Route path="/" element={<PageWrapper><Index /></PageWrapper>} />
-      <Route path="/auth" element={<PageWrapper><Auth /></PageWrapper>} />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <PageWrapper><Dashboard /></PageWrapper>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/novo"
-        element={
-          <ProtectedRoute>
-            <PageWrapper><NovoRegistro /></PageWrapper>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/registro"
-        element={
-          <ProtectedRoute>
-            <PageWrapper><RegistroMarca /></PageWrapper>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/publicacao"
-        element={
-          <ProtectedRoute>
-            <PageWrapper><Publicacao /></PageWrapper>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/usuarios"
-        element={
-          <ProtectedRoute>
-            <PageWrapper><Usuarios /></PageWrapper>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard/equipe"
-        element={
-          <ProtectedRoute>
-            <PageWrapper><Equipe /></PageWrapper>
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageWrapper><Index /></PageWrapper>} />
+        <Route path="/auth" element={<PageWrapper><Auth /></PageWrapper>} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><Dashboard /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/novo"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><NovoRegistro /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/registro"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><RegistroMarca /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/publicacao"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><Publicacao /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/usuarios"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><Usuarios /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/equipe"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><Equipe /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
   );
 };
 

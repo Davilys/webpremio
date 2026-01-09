@@ -62,15 +62,20 @@ const Dashboard: React.FC = () => {
   const { registrations, loading, getQuantityByPayment } = useRegistrations(selectedDate);
 
   const registroData = getQuantityByPayment('registro');
+  // totalPremiacao = apenas avista + parcelado (para cálculo de meta e bônus)
+  const registroTotalPremiacao = registroData.totalPremiacao;
+  // total = todas as marcas fechadas (incluindo valor personalizado)
   const registroTotal = registroData.total;
   
   const publicacaoData = getQuantityByPayment('publicacao');
+  const publicacaoTotalPremiacao = publicacaoData.totalPremiacao;
   const publicacaoTotal = publicacaoData.total;
   
   const totalGeral = registroTotal + publicacaoTotal;
 
+  // Calcular bônus usando apenas registros que geram premiação (avista + parcelado)
   const registroBonus = calculateRegistroBonus(
-    registroData.total,
+    registroTotalPremiacao,
     registroData.avista,
     registroData.parcelado
   );
@@ -90,10 +95,10 @@ const Dashboard: React.FC = () => {
     
     return weeks.map((_, index) => ({
       name: `Sem ${index + 1}`,
-      atual: Math.round(registroTotal / weeks.length * (index + 1)),
+      atual: Math.round(registroTotalPremiacao / weeks.length * (index + 1)),
       meta: BONUS_GOAL,
     }));
-  }, [selectedDate, registroTotal]);
+  }, [selectedDate, registroTotalPremiacao]);
 
   const funnelData = useMemo(() => [
     { name: 'Total de Cadastros', value: totalGeral, color: 'hsl(224, 71%, 4%)' },
@@ -174,15 +179,15 @@ const Dashboard: React.FC = () => {
                   <PremiumStatsCard
                     title="Registros de Marca"
                     value={registroTotal}
-                    subtitle={`Meta: ${BONUS_GOAL} | À vista: ${registroData.avista}`}
+                    subtitle={`Meta: ${registroTotalPremiacao}/${BONUS_GOAL} | Sem bônus: ${registroData.promocao}`}
                     icon={Bookmark}
-                    variant={registroTotal >= BONUS_GOAL ? 'success' : 'primary'}
+                    variant={registroTotalPremiacao >= BONUS_GOAL ? 'success' : 'primary'}
                     delay={0}
                   />
                   <PremiumStatsCard
                     title="Publicações"
                     value={publicacaoTotal}
-                    subtitle={`À vista: ${publicacaoData.avista} | Parcelado: ${publicacaoData.parcelado}`}
+                    subtitle={`Com bônus: ${publicacaoTotalPremiacao} | Sem bônus: ${publicacaoData.promocao}`}
                     icon={FileText}
                     variant="accent"
                     delay={0.05}
@@ -231,6 +236,7 @@ const Dashboard: React.FC = () => {
                       icon={<Bookmark className="w-5 h-5 text-background" />}
                       avistaQuantity={registroData.avista}
                       parceladoQuantity={registroData.parcelado}
+                      promocaoQuantity={registroData.promocao}
                       monthYear={monthYear}
                     />
                   </motion.div>
@@ -244,6 +250,7 @@ const Dashboard: React.FC = () => {
                       icon={<FileText className="w-5 h-5 text-background" />}
                       avistaQuantity={publicacaoData.avista}
                       parceladoQuantity={publicacaoData.parcelado}
+                      promocaoQuantity={publicacaoData.promocao}
                       monthYear={monthYear}
                     />
                   </motion.div>
@@ -277,10 +284,13 @@ const Dashboard: React.FC = () => {
                           <span className="font-medium text-sm">Registros</span>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold">{registroTotal} / {BONUS_GOAL}</p>
+                          <p className="font-bold">{registroTotalPremiacao} / {BONUS_GOAL}</p>
                           <p className="text-xs text-muted-foreground">
-                            {registroTotal >= BONUS_GOAL ? '✓ Meta atingida' : `Faltam ${BONUS_GOAL - registroTotal}`}
+                            {registroTotalPremiacao >= BONUS_GOAL ? '✓ Meta atingida' : `Faltam ${BONUS_GOAL - registroTotalPremiacao}`}
                           </p>
+                          {registroData.promocao > 0 && (
+                            <p className="text-xs text-amber-600">{registroData.promocao} sem bônus</p>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">

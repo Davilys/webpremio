@@ -315,7 +315,7 @@ const NovoRegistro: React.FC = () => {
                       {PAYMENT_METHOD_LABELS.parcelado} — {formData.tipo_premiacao === 'publicacao' ? '6x de R$ 398,00' : formatCurrency(PAYMENT_VALUES[formData.tipo_premiacao].parcelado)}
                     </SelectItem>
                     <SelectItem value="promocao">
-                      {PAYMENT_METHOD_LABELS.promocao} — Valor Personalizado
+                      {PAYMENT_METHOD_LABELS.promocao} — Sem Premiação (R$ 0,00)
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -326,10 +326,10 @@ const NovoRegistro: React.FC = () => {
                 )}
               </div>
 
-              {/* Valor Promocional */}
+              {/* Valor Personalizado (Sem Premiação) */}
               {formData.forma_pagamento === 'promocao' && (
                 <div className="space-y-2">
-                  <Label htmlFor="valor_promocao">Valor Promocional (R$) *</Label>
+                  <Label htmlFor="valor_promocao">Valor Personalizado (R$) *</Label>
                   <div className="relative">
                     <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
@@ -344,8 +344,8 @@ const NovoRegistro: React.FC = () => {
                       required
                     />
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Informe o valor promocional do serviço
+                  <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
+                    ⚠️ Valor personalizado não gera premiação. A marca será contabilizada como fechada, mas sem bônus.
                   </p>
                 </div>
               )}

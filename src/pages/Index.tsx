@@ -21,6 +21,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const Index: React.FC = () => {
   const { user, loading } = useAuth();
@@ -62,7 +63,8 @@ const Index: React.FC = () => {
             </a>
           </nav>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <ThemeToggle variant="dropdown" />
             <Button 
               variant="ghost" 
               onClick={() => navigate('/auth')}

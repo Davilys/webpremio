@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import ThemeToggle from '@/components/ThemeToggle';
 import {
   LayoutDashboard,
   Users,
@@ -17,14 +18,9 @@ import {
   PlusCircle,
   Search,
   Settings,
-  Moon,
   ChevronsRight,
-  MessageSquare,
-  Link2,
-  Bot,
   Zap,
-  Send,
-  Calendar,
+  MessageSquare,
   Bell,
 } from 'lucide-react';
 
@@ -234,9 +230,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
             <button className="p-2 rounded-lg hover:bg-secondary text-muted-foreground">
               <Settings className="w-5 h-5" />
             </button>
-            <button className="p-2 rounded-lg hover:bg-secondary text-muted-foreground">
-              <Moon className="w-5 h-5" />
-            </button>
+            <ThemeToggle variant="icon" />
             <button className="p-2 rounded-lg hover:bg-secondary text-muted-foreground">
               <ChevronsRight className="w-5 h-5" />
             </button>

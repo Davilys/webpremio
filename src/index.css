@@ -5,8 +5,65 @@
 @tailwind utilities;
 
 @layer base {
+  /* LIGHT THEME - Clean & Professional */
   :root {
-    /* ZIONIC DARK THEME - Exact Colors */
+    --background: 0 0% 99%;
+    --foreground: 240 10% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 4%;
+
+    /* Primary - Dark */
+    --primary: 240 10% 4%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Light gray */
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 10% 20%;
+
+    /* Muted */
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 5% 45%;
+
+    /* Accent - Purple */
+    --accent: 270 80% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Success - Green */
+    --success: 142 70% 40%;
+    --success-foreground: 0 0% 100%;
+
+    /* Destructive - Red */
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Warning */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Borders */
+    --border: 240 5% 90%;
+    --input: 240 5% 90%;
+    --ring: 270 80% 60%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar - Light */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 4%;
+    --sidebar-primary: 270 80% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 10% 4%;
+    --sidebar-border: 240 5% 92%;
+    --sidebar-ring: 270 80% 60%;
+  }
+
+  /* DARK THEME - Zionic Style */
+  .dark {
     --background: 240 10% 4%;
     --foreground: 0 0% 100%;
 
@@ -49,8 +106,6 @@
     --input: 240 10% 15%;
     --ring: 270 80% 60%;
 
-    --radius: 0.75rem;
-
     /* Sidebar - Extra dark */
     --sidebar-background: 240 10% 3%;
     --sidebar-foreground: 0 0% 95%;
@@ -76,6 +131,7 @@
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Selection */
@@ -110,7 +166,7 @@
 
   /* Gradient text */
   .text-gradient {
-    background: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(240, 5%, 65%) 100%);
+    background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--muted-foreground)) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -126,18 +182,18 @@
   /* Background animations */
   .bg-grid {
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px);
     background-size: 50px 50px;
   }
 
   .bg-dots {
-    background-image: radial-gradient(circle at center, hsl(0, 0%, 20%) 1px, transparent 1px);
+    background-image: radial-gradient(circle at center, hsl(var(--muted-foreground) / 0.15) 1px, transparent 1px);
     background-size: 30px 30px;
   }
 
   .bg-gradient-radial {
-    background: radial-gradient(ellipse at center, hsl(270, 80%, 15%) 0%, hsl(240, 10%, 4%) 70%);
+    background: radial-gradient(ellipse at center, hsl(var(--accent) / 0.1) 0%, hsl(var(--background)) 70%);
   }
 
   /* Animations */
@@ -201,6 +257,11 @@
   .glass {
     background: hsl(var(--card) / 0.8);
     backdrop-filter: blur(10px);
+  }
+
+  /* Theme transition */
+  .theme-transition {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 }
 

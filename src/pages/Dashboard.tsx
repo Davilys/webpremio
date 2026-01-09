@@ -21,7 +21,7 @@ import {
   Users,
   Clock
 } from 'lucide-react';
-import { format, startOfMonth, endOfMonth, eachWeekOfInterval, startOfWeek } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachWeekOfInterval } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { 
   BONUS_GOAL, 
@@ -48,7 +48,7 @@ const motivationalQuotes = [
 ];
 
 const Dashboard: React.FC = () => {
-  const { profile, isAdmin } = useAuth();
+  const { profile } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
@@ -61,17 +61,14 @@ const Dashboard: React.FC = () => {
 
   const { registrations, loading, getQuantityByPayment } = useRegistrations(selectedDate);
 
-  // Dados de Registro de Marca
   const registroData = getQuantityByPayment('registro');
   const registroTotal = registroData.total;
   
-  // Dados de Publicação
   const publicacaoData = getQuantityByPayment('publicacao');
   const publicacaoTotal = publicacaoData.total;
   
   const totalGeral = registroTotal + publicacaoTotal;
 
-  // Calcular bônus usando as novas regras
   const registroBonus = calculateRegistroBonus(
     registroData.total,
     registroData.avista,
@@ -86,43 +83,26 @@ const Dashboard: React.FC = () => {
 
   const monthYear = format(selectedDate, "MMMM 'de' yyyy", { locale: ptBR });
 
-  // Generate chart data for the month
   const chartData = useMemo(() => {
     const start = startOfMonth(selectedDate);
     const end = endOfMonth(selectedDate);
     const weeks = eachWeekOfInterval({ start, end }, { weekStartsOn: 0 });
     
-    return weeks.map((week, index) => ({
+    return weeks.map((_, index) => ({
       name: `Sem ${index + 1}`,
       atual: Math.round(registroTotal / weeks.length * (index + 1)),
       meta: BONUS_GOAL,
     }));
   }, [selectedDate, registroTotal]);
 
-  // Funnel data
   const funnelData = useMemo(() => [
-    { name: 'Total de Cadastros', value: totalGeral, color: 'hsl(199, 100%, 48%)' },
-    { name: 'Registros de Marca', value: registroTotal, color: 'hsl(199, 100%, 40%)' },
-    { name: 'Publicações', value: publicacaoTotal, color: 'hsl(152, 69%, 45%)' },
-    { name: 'Pagamentos à Vista', value: registroData.avista + publicacaoData.avista, color: 'hsl(152, 69%, 35%)' },
+    { name: 'Total de Cadastros', value: totalGeral, color: 'hsl(224, 71%, 4%)' },
+    { name: 'Registros de Marca', value: registroTotal, color: 'hsl(224, 50%, 20%)' },
+    { name: 'Publicações', value: publicacaoTotal, color: 'hsl(142, 76%, 36%)' },
+    { name: 'Pagamentos à Vista', value: registroData.avista + publicacaoData.avista, color: 'hsl(142, 76%, 30%)' },
   ], [totalGeral, registroTotal, publicacaoTotal, registroData.avista, publicacaoData.avista]);
 
   const userName = profile?.nome?.split(' ')[0] || 'Usuário';
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
 
   return (
     <DashboardLayout>
@@ -133,29 +113,23 @@ const Dashboard: React.FC = () => {
         motivationalQuote={motivationalQuote}
       />
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="space-y-8"
-      >
-        {/* Header Section */}
-        <motion.div variants={itemVariants} className="space-y-6">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-            <div className="space-y-2">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="space-y-4">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+            <div>
               <motion.h1 
-                className="text-3xl lg:text-4xl font-bold text-foreground"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-2xl lg:text-3xl font-bold text-foreground tracking-tight"
               >
                 Metas & Performance
               </motion.h1>
               <motion.p 
-                className="text-muted-foreground text-lg"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="text-muted-foreground mt-1"
               >
                 Acompanhe seus resultados em tempo real
               </motion.p>
@@ -169,9 +143,8 @@ const Dashboard: React.FC = () => {
             />
           </div>
 
-          {/* Tabs */}
           <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
-        </motion.div>
+        </div>
 
         {loading ? (
           <div className="space-y-6">
@@ -184,18 +157,17 @@ const Dashboard: React.FC = () => {
               <SkeletonLoader variant="chart" />
               <SkeletonLoader variant="chart" />
             </div>
-            <SkeletonLoader variant="table" />
           </div>
         ) : (
           <AnimatePresence mode="wait">
             {activeTab === 'overview' && (
               <motion.div
                 key="overview"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-8"
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-6"
               >
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -213,7 +185,7 @@ const Dashboard: React.FC = () => {
                     subtitle={`À vista: ${publicacaoData.avista} | Parcelado: ${publicacaoData.parcelado}`}
                     icon={FileText}
                     variant="accent"
-                    delay={0.1}
+                    delay={0.05}
                   />
                   <PremiumStatsCard
                     title="Total de Cadastros"
@@ -221,7 +193,7 @@ const Dashboard: React.FC = () => {
                     subtitle="Marcas + Publicações"
                     icon={TrendingUp}
                     variant="default"
-                    delay={0.2}
+                    delay={0.1}
                   />
                   <PremiumStatsCard
                     title="Premiação Total"
@@ -230,11 +202,11 @@ const Dashboard: React.FC = () => {
                     icon={Award}
                     variant={totalBonus > 0 ? 'success' : 'default'}
                     formatAsCurrency
-                    delay={0.3}
+                    delay={0.15}
                   />
                 </div>
 
-                {/* Charts Row */}
+                {/* Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <GoalProgressChart 
                     data={chartData}
@@ -250,26 +222,26 @@ const Dashboard: React.FC = () => {
                 {/* Bonus Panels */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
+                    transition={{ delay: 0.2 }}
                   >
                     <BonusPanelRegistro
                       title="Registro de Marca"
-                      icon={<Bookmark className="w-6 h-6 text-primary-foreground" />}
+                      icon={<Bookmark className="w-5 h-5 text-background" />}
                       avistaQuantity={registroData.avista}
                       parceladoQuantity={registroData.parcelado}
                       monthYear={monthYear}
                     />
                   </motion.div>
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
+                    transition={{ delay: 0.25 }}
                   >
                     <BonusPanelPublicacao
                       title="Publicação"
-                      icon={<FileText className="w-6 h-6 text-primary-foreground" />}
+                      icon={<FileText className="w-5 h-5 text-background" />}
                       avistaQuantity={publicacaoData.avista}
                       parceladoQuantity={publicacaoData.parcelado}
                       monthYear={monthYear}
@@ -277,7 +249,6 @@ const Dashboard: React.FC = () => {
                   </motion.div>
                 </div>
 
-                {/* Recent Registrations */}
                 <RecentRegistrationsTable registrations={registrations} />
               </motion.div>
             )}
@@ -285,10 +256,10 @@ const Dashboard: React.FC = () => {
             {activeTab === 'goals' && (
               <motion.div
                 key="goals"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
                 className="space-y-6"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -297,39 +268,32 @@ const Dashboard: React.FC = () => {
                     goalValue={BONUS_GOAL}
                     title="Meta de Registros"
                   />
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="bg-card rounded-2xl p-6 border border-border/50 shadow-[0_4px_24px_-4px_hsl(210_60%_15%/0.08)]"
-                  >
+                  <div className="bg-card rounded-xl p-6 border border-border">
                     <h3 className="font-semibold text-foreground mb-4">Resumo de Metas</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
                         <div className="flex items-center gap-3">
-                          <Bookmark className="w-5 h-5 text-primary" />
-                          <span className="font-medium">Registros</span>
+                          <Bookmark className="w-5 h-5 text-foreground" />
+                          <span className="font-medium text-sm">Registros</span>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-lg">{registroTotal} / {BONUS_GOAL}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {registroTotal >= BONUS_GOAL ? '✅ Meta atingida!' : `Faltam ${BONUS_GOAL - registroTotal}`}
+                          <p className="font-bold">{registroTotal} / {BONUS_GOAL}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {registroTotal >= BONUS_GOAL ? '✓ Meta atingida' : `Faltam ${BONUS_GOAL - registroTotal}`}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl">
+                      <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
                         <div className="flex items-center gap-3">
-                          <Award className="w-5 h-5 text-success" />
-                          <span className="font-medium">Premiação Projetada</span>
+                          <Award className="w-5 h-5 text-accent" />
+                          <span className="font-medium text-sm">Premiação</span>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold text-lg text-success">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalBonus)}
-                          </p>
-                        </div>
+                        <p className="font-bold text-accent">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalBonus)}
+                        </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -337,10 +301,10 @@ const Dashboard: React.FC = () => {
             {activeTab === 'performance' && (
               <motion.div
                 key="performance"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
                 className="space-y-6"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -358,20 +322,20 @@ const Dashboard: React.FC = () => {
                     subtitle="Cadastros por dia"
                     icon={Clock}
                     variant="primary"
-                    delay={0.1}
+                    delay={0.05}
                   />
                   <PremiumStatsCard
-                    title="Clientes Ativos"
+                    title="Clientes Únicos"
                     value={new Set(registrations.map(r => r.nome_cliente)).size}
-                    subtitle="Clientes únicos"
+                    subtitle="Clientes atendidos"
                     icon={Users}
                     variant="accent"
-                    delay={0.2}
+                    delay={0.1}
                   />
                 </div>
                 <PerformanceFunnel
                   stages={funnelData}
-                  title="Funil de Conversão Detalhado"
+                  title="Funil de Conversão"
                 />
               </motion.div>
             )}
@@ -379,22 +343,18 @@ const Dashboard: React.FC = () => {
             {activeTab === 'comparison' && (
               <motion.div
                 key="comparison"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="flex items-center justify-center py-16"
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center justify-center py-20"
               >
                 <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-                    <TrendingUp className="w-10 h-10 text-muted-foreground" />
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-secondary flex items-center justify-center">
+                    <TrendingUp className="w-8 h-8 text-muted-foreground" />
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    Comparativos em breve
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Compare seu desempenho com períodos anteriores
-                  </p>
+                  <h3 className="font-semibold text-foreground mb-2">Em breve</h3>
+                  <p className="text-sm text-muted-foreground">Compare seu desempenho</p>
                 </div>
               </motion.div>
             )}
@@ -402,17 +362,17 @@ const Dashboard: React.FC = () => {
             {activeTab === 'history' && (
               <motion.div
                 key="history"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
               >
                 <RecentRegistrationsTable registrations={registrations} />
               </motion.div>
             )}
           </AnimatePresence>
         )}
-      </motion.div>
+      </div>
     </DashboardLayout>
   );
 };

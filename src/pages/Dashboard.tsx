@@ -1,20 +1,27 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import StatsCard from '@/components/dashboard/StatsCard';
+import PremiumStatsCard from '@/components/dashboard/PremiumStatsCard';
 import BonusPanelRegistro from '@/components/dashboard/BonusPanelRegistro';
 import BonusPanelPublicacao from '@/components/dashboard/BonusPanelPublicacao';
-import MonthSelector from '@/components/dashboard/MonthSelector';
-import { Bookmark, FileText, Award, TrendingUp, Sparkles, X } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { format } from 'date-fns';
+import DashboardTabs from '@/components/dashboard/DashboardTabs';
+import PeriodFilter from '@/components/dashboard/PeriodFilter';
+import GoalProgressChart from '@/components/dashboard/GoalProgressChart';
+import PerformanceFunnel from '@/components/dashboard/PerformanceFunnel';
+import RecentRegistrationsTable from '@/components/dashboard/RecentRegistrationsTable';
+import WelcomePopup from '@/components/dashboard/WelcomePopup';
+import SkeletonLoader from '@/components/dashboard/SkeletonLoader';
+import { 
+  Bookmark, 
+  FileText, 
+  Award, 
+  TrendingUp, 
+  Users,
+  Clock
+} from 'lucide-react';
+import { format, startOfMonth, endOfMonth, eachWeekOfInterval, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { 
   BONUS_GOAL, 
@@ -44,8 +51,9 @@ const Dashboard: React.FC = () => {
   const { profile, isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showWelcomePopup, setShowWelcomePopup] = useState(true);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month' | 'custom'>('month');
 
-  // Seleciona uma frase motivacional aleatória a cada visita
   const motivationalQuote = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
     return motivationalQuotes[randomIndex];
@@ -76,187 +84,335 @@ const Dashboard: React.FC = () => {
   
   const totalBonus = registroBonus.total + publicacaoBonus.total;
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
+  const monthYear = format(selectedDate, "MMMM 'de' yyyy", { locale: ptBR });
+
+  // Generate chart data for the month
+  const chartData = useMemo(() => {
+    const start = startOfMonth(selectedDate);
+    const end = endOfMonth(selectedDate);
+    const weeks = eachWeekOfInterval({ start, end }, { weekStartsOn: 0 });
+    
+    return weeks.map((week, index) => ({
+      name: `Sem ${index + 1}`,
+      atual: Math.round(registroTotal / weeks.length * (index + 1)),
+      meta: BONUS_GOAL,
+    }));
+  }, [selectedDate, registroTotal]);
+
+  // Funnel data
+  const funnelData = useMemo(() => [
+    { name: 'Total de Cadastros', value: totalGeral, color: 'hsl(199, 100%, 48%)' },
+    { name: 'Registros de Marca', value: registroTotal, color: 'hsl(199, 100%, 40%)' },
+    { name: 'Publicações', value: publicacaoTotal, color: 'hsl(152, 69%, 45%)' },
+    { name: 'Pagamentos à Vista', value: registroData.avista + publicacaoData.avista, color: 'hsl(152, 69%, 35%)' },
+  ], [totalGeral, registroTotal, publicacaoTotal, registroData.avista, publicacaoData.avista]);
+
+  const userName = profile?.nome?.split(' ')[0] || 'Usuário';
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
   };
 
-  const monthYear = format(selectedDate, "MMMM 'de' yyyy", { locale: ptBR });
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <DashboardLayout>
-      {/* Welcome Popup */}
-      <Dialog open={showWelcomePopup} onOpenChange={setShowWelcomePopup}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-2xl">
-              <span>Olá, {profile?.nome?.split(' ')[0] || 'Usuário'}! 👋</span>
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col items-center gap-4 py-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-primary-foreground" />
+      <WelcomePopup
+        isOpen={showWelcomePopup}
+        onClose={() => setShowWelcomePopup(false)}
+        userName={userName}
+        motivationalQuote={motivationalQuote}
+      />
+
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="space-y-8"
+      >
+        {/* Header Section */}
+        <motion.div variants={itemVariants} className="space-y-6">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            <div className="space-y-2">
+              <motion.h1 
+                className="text-3xl lg:text-4xl font-bold text-foreground"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                Metas & Performance
+              </motion.h1>
+              <motion.p 
+                className="text-muted-foreground text-lg"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                Acompanhe seus resultados em tempo real
+              </motion.p>
             </div>
-            <p className="text-center text-lg font-medium text-foreground">
-              {motivationalQuote}
-            </p>
+            
+            <PeriodFilter
+              selectedPeriod={selectedPeriod}
+              onPeriodChange={setSelectedPeriod}
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+            />
           </div>
-          <div className="flex justify-center">
-            <Button 
-              onClick={() => setShowWelcomePopup(false)}
-              className="w-full sm:w-auto"
-            >
-              Vamos lá! 🚀
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
 
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              Olá, {profile?.nome?.split(' ')[0] || 'Usuário'}! 👋
-            </h1>
-          </div>
-          <MonthSelector currentDate={selectedDate} onChange={setSelectedDate} />
-        </div>
+          {/* Tabs */}
+          <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        </motion.div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard
-            title="Registros de Marca"
-            value={registroTotal}
-            subtitle={`Meta: ${BONUS_GOAL} | À vista: ${registroData.avista}`}
-            icon={Bookmark}
-            variant={registroTotal >= BONUS_GOAL ? 'success' : 'default'}
-          />
-          <StatsCard
-            title="Publicações"
-            value={publicacaoTotal}
-            subtitle={`À vista: ${publicacaoData.avista} | Parcelado: ${publicacaoData.parcelado}`}
-            icon={FileText}
-            variant="default"
-          />
-          <StatsCard
-            title="Total de Cadastros"
-            value={totalGeral}
-            subtitle="Marcas + Publicações"
-            icon={TrendingUp}
-            variant="primary"
-          />
-          <StatsCard
-            title="Premiação Total"
-            value={formatCurrency(totalBonus)}
-            subtitle="Valor acumulado"
-            icon={Award}
-            variant={totalBonus > 0 ? 'success' : 'default'}
-          />
-        </div>
-
-        {/* Bonus Panels */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <BonusPanelRegistro
-            title="Registro de Marca"
-            icon={<Bookmark className="w-6 h-6 text-primary-foreground" />}
-            avistaQuantity={registroData.avista}
-            parceladoQuantity={registroData.parcelado}
-            monthYear={monthYear}
-          />
-          <BonusPanelPublicacao
-            title="Publicação"
-            icon={<FileText className="w-6 h-6 text-primary-foreground" />}
-            avistaQuantity={publicacaoData.avista}
-            parceladoQuantity={publicacaoData.parcelado}
-            monthYear={monthYear}
-          />
-        </div>
-
-        {/* Recent Registrations */}
-        {registrations.length > 0 && (
-          <div className="bg-card rounded-xl p-6 card-shadow">
-            <h2 className="text-xl font-bold mb-4">Últimos Cadastros</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Cliente
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Marca
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Tipo
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Pagamento
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Qtd
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Data
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {registrations.slice(0, 5).map((reg) => (
-                    <tr
-                      key={reg.id}
-                      className="border-b border-border/50 hover:bg-muted/30 transition-colors"
-                    >
-                      <td className="py-3 px-4 text-sm">{reg.nome_cliente}</td>
-                      <td className="py-3 px-4 text-sm">{reg.nome_marca}</td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            reg.tipo_premiacao === 'registro'
-                              ? 'bg-primary/10 text-primary'
-                              : 'bg-accent/10 text-accent'
-                          }`}
-                        >
-                          {reg.tipo_premiacao === 'registro'
-                            ? 'Registro'
-                            : 'Publicação'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            reg.forma_pagamento === 'avista'
-                              ? 'bg-success/10 text-success'
-                              : 'bg-warning/10 text-warning'
-                          }`}
-                        >
-                          {reg.forma_pagamento === 'avista' ? 'À Vista' : 'Parcelado'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-sm font-medium">
-                        {reg.quantidade}
-                      </td>
-                      <td className="py-3 px-4 text-sm text-muted-foreground">
-                        {format(new Date(reg.data_referencia), 'dd/MM/yyyy')}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {loading ? (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <SkeletonLoader key={i} variant="card" />
+              ))}
             </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <SkeletonLoader variant="chart" />
+              <SkeletonLoader variant="chart" />
+            </div>
+            <SkeletonLoader variant="table" />
           </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            {activeTab === 'overview' && (
+              <motion.div
+                key="overview"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-8"
+              >
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <PremiumStatsCard
+                    title="Registros de Marca"
+                    value={registroTotal}
+                    subtitle={`Meta: ${BONUS_GOAL} | À vista: ${registroData.avista}`}
+                    icon={Bookmark}
+                    variant={registroTotal >= BONUS_GOAL ? 'success' : 'primary'}
+                    delay={0}
+                  />
+                  <PremiumStatsCard
+                    title="Publicações"
+                    value={publicacaoTotal}
+                    subtitle={`À vista: ${publicacaoData.avista} | Parcelado: ${publicacaoData.parcelado}`}
+                    icon={FileText}
+                    variant="accent"
+                    delay={0.1}
+                  />
+                  <PremiumStatsCard
+                    title="Total de Cadastros"
+                    value={totalGeral}
+                    subtitle="Marcas + Publicações"
+                    icon={TrendingUp}
+                    variant="default"
+                    delay={0.2}
+                  />
+                  <PremiumStatsCard
+                    title="Premiação Total"
+                    value={totalBonus}
+                    subtitle="Valor acumulado"
+                    icon={Award}
+                    variant={totalBonus > 0 ? 'success' : 'default'}
+                    formatAsCurrency
+                    delay={0.3}
+                  />
+                </div>
+
+                {/* Charts Row */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <GoalProgressChart 
+                    data={chartData}
+                    goalValue={BONUS_GOAL}
+                    title="Progresso de Registros"
+                  />
+                  <PerformanceFunnel
+                    stages={funnelData}
+                    title="Funil de Performance"
+                  />
+                </div>
+
+                {/* Bonus Panels */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <BonusPanelRegistro
+                      title="Registro de Marca"
+                      icon={<Bookmark className="w-6 h-6 text-primary-foreground" />}
+                      avistaQuantity={registroData.avista}
+                      parceladoQuantity={registroData.parcelado}
+                      monthYear={monthYear}
+                    />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <BonusPanelPublicacao
+                      title="Publicação"
+                      icon={<FileText className="w-6 h-6 text-primary-foreground" />}
+                      avistaQuantity={publicacaoData.avista}
+                      parceladoQuantity={publicacaoData.parcelado}
+                      monthYear={monthYear}
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Recent Registrations */}
+                <RecentRegistrationsTable registrations={registrations} />
+              </motion.div>
+            )}
+
+            {activeTab === 'goals' && (
+              <motion.div
+                key="goals"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <GoalProgressChart 
+                    data={chartData}
+                    goalValue={BONUS_GOAL}
+                    title="Meta de Registros"
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-card rounded-2xl p-6 border border-border/50 shadow-[0_4px_24px_-4px_hsl(210_60%_15%/0.08)]"
+                  >
+                    <h3 className="font-semibold text-foreground mb-4">Resumo de Metas</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl">
+                        <div className="flex items-center gap-3">
+                          <Bookmark className="w-5 h-5 text-primary" />
+                          <span className="font-medium">Registros</span>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-lg">{registroTotal} / {BONUS_GOAL}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {registroTotal >= BONUS_GOAL ? '✅ Meta atingida!' : `Faltam ${BONUS_GOAL - registroTotal}`}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl">
+                        <div className="flex items-center gap-3">
+                          <Award className="w-5 h-5 text-success" />
+                          <span className="font-medium">Premiação Projetada</span>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-lg text-success">
+                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalBonus)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'performance' && (
+              <motion.div
+                key="performance"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <PremiumStatsCard
+                    title="Taxa de Conversão"
+                    value={totalGeral > 0 ? Math.round((registroData.avista / totalGeral) * 100) : 0}
+                    subtitle="Pagamentos à vista"
+                    icon={TrendingUp}
+                    variant="success"
+                    delay={0}
+                  />
+                  <PremiumStatsCard
+                    title="Média Diária"
+                    value={Math.round(totalGeral / 30)}
+                    subtitle="Cadastros por dia"
+                    icon={Clock}
+                    variant="primary"
+                    delay={0.1}
+                  />
+                  <PremiumStatsCard
+                    title="Clientes Ativos"
+                    value={new Set(registrations.map(r => r.nome_cliente)).size}
+                    subtitle="Clientes únicos"
+                    icon={Users}
+                    variant="accent"
+                    delay={0.2}
+                  />
+                </div>
+                <PerformanceFunnel
+                  stages={funnelData}
+                  title="Funil de Conversão Detalhado"
+                />
+              </motion.div>
+            )}
+
+            {activeTab === 'comparison' && (
+              <motion.div
+                key="comparison"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center justify-center py-16"
+              >
+                <div className="text-center">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+                    <TrendingUp className="w-10 h-10 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    Comparativos em breve
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Compare seu desempenho com períodos anteriores
+                  </p>
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'history' && (
+              <motion.div
+                key="history"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <RecentRegistrationsTable registrations={registrations} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         )}
-
-        {loading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-pulse text-muted-foreground">
-              Carregando dados...
-            </div>
-          </div>
-        )}
-      </div>
+      </motion.div>
     </DashboardLayout>
   );
 };

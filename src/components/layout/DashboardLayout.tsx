@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import logoWebmarcas from '@/assets/logo-webmarcas.png';
 import {
   LayoutDashboard,
   Users,
@@ -93,33 +92,29 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-72 bg-sidebar transform transition-transform duration-300 ease-in-out lg:translate-x-0",
+          "fixed lg:static inset-y-0 left-0 z-50 w-64 bg-sidebar transform transition-transform duration-300 ease-out lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex flex-col h-full">
-          {/* Header with Logo */}
-          <div className="p-6 border-b border-sidebar-border">
+          {/* Header */}
+          <div className="p-5 border-b border-sidebar-border">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-sidebar-primary/10 flex items-center justify-center">
-                  <img 
-                    src={logoWebmarcas} 
-                    alt="WebMarcas" 
-                    className="w-6 h-6 object-contain"
-                  />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-sidebar-primary flex items-center justify-center">
+                  <span className="text-sidebar-primary-foreground font-bold text-sm">W</span>
                 </div>
                 <div>
-                  <h1 className="font-bold text-sidebar-foreground tracking-tight">WebMarcas</h1>
+                  <h1 className="font-semibold text-sidebar-foreground text-sm tracking-tight">WebMarcas</h1>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-success" />
-                    <p className="text-xs text-sidebar-foreground/60">Sistema Online</p>
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    <p className="text-[11px] text-sidebar-foreground/50">Online</p>
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground/70"
+                className="lg:hidden p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground/60"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -127,52 +122,42 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-            <p className="px-4 py-2 text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">
+          <nav className="flex-1 p-3 overflow-y-auto">
+            <p className="px-3 py-2 text-[10px] font-semibold text-sidebar-foreground/30 uppercase tracking-wider">
               Menu
             </p>
-            {filteredNavItems.map((item, index) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
+            <div className="space-y-0.5">
+              {filteredNavItems.map((item) => {
+                const isActive = location.pathname === item.href;
+                return (
                   <Link
+                    key={item.href}
                     to={item.href}
                     onClick={() => setSidebarOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
+                      "flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-150 group relative text-sm",
                       isActive
                         ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
-                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                     )}
                   >
                     {item.icon}
                     <span>{item.label}</span>
                     {isActive && (
-                      <motion.div
-                        layoutId="activeIndicator"
-                        className="absolute right-3"
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </motion.div>
+                      <ChevronRight className="w-4 h-4 ml-auto" />
                     )}
                   </Link>
-                </motion.div>
-              );
-            })}
+                );
+              })}
+            </div>
           </nav>
 
           {/* User info */}
-          <div className="p-4 border-t border-sidebar-border">
-            <div className="p-4 rounded-xl bg-sidebar-accent/50">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sidebar-primary to-success/60 flex items-center justify-center">
-                  <span className="text-sm font-bold text-sidebar-primary-foreground">
+          <div className="p-3 border-t border-sidebar-border">
+            <div className="p-3 rounded-lg bg-sidebar-accent">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-9 h-9 rounded-full bg-sidebar-primary flex items-center justify-center">
+                  <span className="text-sm font-semibold text-sidebar-primary-foreground">
                     {profile?.nome?.charAt(0).toUpperCase() || 'U'}
                   </span>
                 </div>
@@ -180,21 +165,15 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                   <p className="text-sm font-medium text-sidebar-foreground truncate">
                     {profile?.nome || 'Usuário'}
                   </p>
-                  <div className="flex items-center gap-1.5">
-                    <span className={cn(
-                      "w-1.5 h-1.5 rounded-full",
-                      role === 'admin' ? "bg-sidebar-primary" : "bg-success"
-                    )} />
-                    <p className="text-xs text-sidebar-foreground/60 capitalize">
-                      {role === 'admin' ? 'Administrador' : 'Funcionário'}
-                    </p>
-                  </div>
+                  <p className="text-[11px] text-sidebar-foreground/50 capitalize">
+                    {role === 'admin' ? 'Administrador' : 'Funcionário'}
+                  </p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-start text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10"
+                className="w-full justify-start text-sidebar-foreground/60 hover:text-red-400 hover:bg-red-500/10 h-8 text-sm"
                 onClick={handleSignOut}
               >
                 <LogOut className="w-4 h-4 mr-2" />
@@ -208,39 +187,29 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile header */}
-        <header className="lg:hidden sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3">
-          <div className="flex items-center justify-between">
+        <header className="lg:hidden sticky top-0 z-30 bg-background border-b border-border px-4 h-14 flex items-center">
+          <div className="flex items-center justify-between w-full">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(true)}
-              className="hover:bg-secondary"
+              className="h-9 w-9"
             >
               <Menu className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <img 
-                  src={logoWebmarcas} 
-                  alt="WebMarcas" 
-                  className="w-5 h-5 object-contain"
-                />
+              <div className="w-7 h-7 rounded-full bg-foreground flex items-center justify-center">
+                <span className="text-background font-bold text-xs">W</span>
               </div>
-              <span className="font-bold text-foreground tracking-tight">WebMarcas</span>
+              <span className="font-semibold text-foreground text-sm">WebMarcas</span>
             </div>
-            <div className="w-10" />
+            <div className="w-9" />
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 lg:p-8 overflow-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {children}
-          </motion.div>
+        <main className="flex-1 p-4 lg:p-6 overflow-auto">
+          {children}
         </main>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
-import { DollarSign, CreditCard, Banknote, Ban } from 'lucide-react';
+import { DollarSign, CreditCard, Banknote } from 'lucide-react';
 import { 
   PUBLICACAO_BONUS_AVISTA, 
   PUBLICACAO_BONUS_PARCELADO,
@@ -12,7 +12,6 @@ interface BonusPanelPublicacaoProps {
   icon: React.ReactNode;
   avistaQuantity: number;
   parceladoQuantity: number;
-  promocaoQuantity?: number; // Valor personalizado (sem premiação)
   monthYear: string;
   className?: string;
 }
@@ -22,15 +21,10 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
   icon,
   avistaQuantity = 0,
   parceladoQuantity = 0,
-  promocaoQuantity = 0,
   monthYear,
   className,
 }, ref) => {
-  // totalPremiacao = apenas avista + parcelado (para cálculo de bônus)
-  const totalPremiacao = avistaQuantity + parceladoQuantity;
-  // totalPublicacoes = inclui promocao (total de publicações fechadas)
-  const totalPublicacoes = totalPremiacao + promocaoQuantity;
-  
+  const totalQuantity = avistaQuantity + parceladoQuantity;
   const bonusData = calculatePublicacaoBonus(avistaQuantity, parceladoQuantity);
 
   const formatCurrency = (value: number) => {
@@ -68,51 +62,33 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
           <p className="text-sm text-muted-foreground">
             Sem meta • Premiação por forma de pagamento
           </p>
-          {promocaoQuantity > 0 && (
-            <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-              {promocaoQuantity} publicação(ões) com valor personalizado (sem premiação)
-            </p>
-          )}
         </div>
 
         {/* Breakdown by payment method */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="p-3 rounded-lg bg-secondary/50">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 rounded-lg bg-secondary/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <Banknote className="w-3.5 h-3.5" />
+              <Banknote className="w-4 h-4" />
               <span className="text-xs font-medium">À Vista</span>
             </div>
-            <p className="text-base font-bold text-foreground">
-              {avistaQuantity}
+            <p className="text-lg font-bold text-foreground">
+              {avistaQuantity} <span className="text-sm font-normal text-muted-foreground">publicações</span>
             </p>
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {formatCurrency(PUBLICACAO_BONUS_AVISTA)}/un
             </p>
           </div>
 
-          <div className="p-3 rounded-lg bg-secondary/50">
+          <div className="p-4 rounded-lg bg-secondary/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <CreditCard className="w-3.5 h-3.5" />
+              <CreditCard className="w-4 h-4" />
               <span className="text-xs font-medium">Parcelado</span>
             </div>
-            <p className="text-base font-bold text-foreground">
-              {parceladoQuantity}
+            <p className="text-lg font-bold text-foreground">
+              {parceladoQuantity} <span className="text-sm font-normal text-muted-foreground">publicações</span>
             </p>
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {formatCurrency(PUBLICACAO_BONUS_PARCELADO)}/un
-            </p>
-          </div>
-
-          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-            <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-1">
-              <Ban className="w-3.5 h-3.5" />
-              <span className="text-xs font-medium">V. Pers.</span>
-            </div>
-            <p className="text-base font-bold text-amber-600 dark:text-amber-400">
-              {promocaoQuantity}
-            </p>
-            <p className="text-[10px] text-amber-600/70 dark:text-amber-400/70 mt-1">
-              R$ 0,00/un
             </p>
           </div>
         </div>
@@ -125,7 +101,7 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
               <span className="text-xs font-medium">Total Publicações</span>
             </div>
             <p className="text-lg font-bold text-foreground">
-              {totalPublicacoes}
+              {totalQuantity}
             </p>
           </div>
 
@@ -135,7 +111,7 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
               <span className="text-xs font-medium">Valor Médio</span>
             </div>
             <p className="text-lg font-bold text-foreground">
-              {totalPremiacao > 0 ? formatCurrency(bonusData.total / totalPremiacao) : formatCurrency(0)}
+              {totalQuantity > 0 ? formatCurrency(bonusData.total / totalQuantity) : formatCurrency(0)}
             </p>
           </div>
         </div>

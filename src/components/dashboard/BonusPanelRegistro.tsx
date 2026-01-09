@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, XCircle, Target, DollarSign, CreditCard, Banknote, Ban } from 'lucide-react';
+import { CheckCircle2, XCircle, Target, DollarSign, CreditCard, Banknote } from 'lucide-react';
 import { 
   BONUS_GOAL, 
   BONUS_VALUE_STANDARD, 
@@ -14,7 +14,6 @@ interface BonusPanelRegistroProps {
   icon: React.ReactNode;
   avistaQuantity: number;
   parceladoQuantity: number;
-  promocaoQuantity?: number; // Valor personalizado (sem premiação)
   monthYear: string;
   className?: string;
 }
@@ -24,17 +23,12 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
   icon,
   avistaQuantity = 0,
   parceladoQuantity = 0,
-  promocaoQuantity = 0,
   monthYear,
   className,
 }, ref) => {
-  // totalPremiacao = apenas avista + parcelado (para cálculo de meta e bônus)
-  const totalPremiacao = avistaQuantity + parceladoQuantity;
-  // totalMarcas = inclui promocao (total de marcas fechadas)
-  const totalMarcas = totalPremiacao + promocaoQuantity;
-  
-  const bonusData = calculateRegistroBonus(totalPremiacao, avistaQuantity, parceladoQuantity);
-  const progress = Math.min((totalPremiacao / BONUS_GOAL) * 100, 100);
+  const totalQuantity = avistaQuantity + parceladoQuantity;
+  const bonusData = calculateRegistroBonus(totalQuantity, avistaQuantity, parceladoQuantity);
+  const progress = Math.min((totalQuantity / BONUS_GOAL) * 100, 100);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -81,7 +75,7 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
               Progresso da Meta
             </span>
             <span className="text-sm font-bold">
-              {totalPremiacao} / {BONUS_GOAL}
+              {totalQuantity} / {BONUS_GOAL}
             </span>
           </div>
           <Progress 
@@ -91,51 +85,33 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
               bonusData.goalReached && "[&>div]:gradient-accent"
             )}
           />
-          {promocaoQuantity > 0 && (
-            <p className="text-xs text-muted-foreground">
-              + {promocaoQuantity} marcas com valor personalizado (não contam para meta)
-            </p>
-          )}
         </div>
 
         {/* Breakdown by payment method */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="p-3 rounded-lg bg-secondary/50">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 rounded-lg bg-secondary/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <Banknote className="w-3.5 h-3.5" />
+              <Banknote className="w-4 h-4" />
               <span className="text-xs font-medium">À Vista</span>
             </div>
-            <p className="text-base font-bold text-foreground">
-              {avistaQuantity}
+            <p className="text-lg font-bold text-foreground">
+              {avistaQuantity} <span className="text-sm font-normal text-muted-foreground">registros</span>
             </p>
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {formatCurrency(bonusData.goalReached ? BONUS_VALUE_AVISTA_AFTER_GOAL : BONUS_VALUE_STANDARD)}/un
             </p>
           </div>
 
-          <div className="p-3 rounded-lg bg-secondary/50">
+          <div className="p-4 rounded-lg bg-secondary/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <CreditCard className="w-3.5 h-3.5" />
+              <CreditCard className="w-4 h-4" />
               <span className="text-xs font-medium">Parcelado</span>
             </div>
-            <p className="text-base font-bold text-foreground">
-              {parceladoQuantity}
+            <p className="text-lg font-bold text-foreground">
+              {parceladoQuantity} <span className="text-sm font-normal text-muted-foreground">registros</span>
             </p>
-            <p className="text-[10px] text-muted-foreground mt-1">
-              {formatCurrency(BONUS_VALUE_STANDARD)}/un
-            </p>
-          </div>
-
-          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-            <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-1">
-              <Ban className="w-3.5 h-3.5" />
-              <span className="text-xs font-medium">V. Pers.</span>
-            </div>
-            <p className="text-base font-bold text-amber-600 dark:text-amber-400">
-              {promocaoQuantity}
-            </p>
-            <p className="text-[10px] text-amber-600/70 dark:text-amber-400/70 mt-1">
-              R$ 0,00/un
+            <p className="text-xs text-muted-foreground mt-1">
+              {formatCurrency(BONUS_VALUE_STANDARD)}/un <span className="text-[10px]">(fixo)</span>
             </p>
           </div>
         </div>

@@ -84,7 +84,6 @@ export const useRegistrations = (
   };
 
   // Nova função: obter quantidade por tipo de premiação E forma de pagamento
-  // IMPORTANTE: 'promocao' (valor personalizado) NÃO conta para premiação
   const getQuantityByPayment = (type: BonusType) => {
     const filtered = registrations.filter((r) => r.tipo_premiacao === type);
     
@@ -96,19 +95,7 @@ export const useRegistrations = (
       .filter((r) => r.forma_pagamento === 'parcelado')
       .reduce((sum, r) => sum + r.quantidade, 0);
     
-    // Promocao conta como marca fechada mas NÃO gera premiação
-    const promocao = filtered
-      .filter((r) => r.forma_pagamento === 'promocao')
-      .reduce((sum, r) => sum + r.quantidade, 0);
-    
-    // total inclui todas as marcas fechadas, totalPremiacao só avista + parcelado
-    return { 
-      avista, 
-      parcelado, 
-      promocao,
-      total: avista + parcelado + promocao, // Total de marcas fechadas
-      totalPremiacao: avista + parcelado // Apenas para cálculo de premiação
-    };
+    return { avista, parcelado, total: avista + parcelado };
   };
 
   return {

@@ -13,6 +13,7 @@ import PerformanceFunnel from '@/components/dashboard/PerformanceFunnel';
 import RecentRegistrationsTable from '@/components/dashboard/RecentRegistrationsTable';
 import WelcomePopup from '@/components/dashboard/WelcomePopup';
 import SkeletonLoader from '@/components/dashboard/SkeletonLoader';
+import PremiumLoader from '@/components/PremiumLoader';
 import { 
   Bookmark, 
   FileText, 
@@ -148,17 +149,13 @@ const Dashboard: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <SkeletonLoader key={i} variant="card" />
-              ))}
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <SkeletonLoader variant="chart" />
-              <SkeletonLoader variant="chart" />
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
+          >
+            <PremiumLoader message="Carregando dados do dashboard" variant="card" className="min-h-[400px]" />
+          </motion.div>
         ) : (
           <AnimatePresence mode="wait">
             {activeTab === 'overview' && (

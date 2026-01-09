@@ -8,6 +8,7 @@ import MonthSelector from '@/components/dashboard/MonthSelector';
 import UserKanbanCard from '@/components/dashboard/UserKanbanCard';
 import TeamRankingChart from '@/components/dashboard/TeamRankingChart';
 import EvolutionChart from '@/components/dashboard/EvolutionChart';
+import PremiumLoader from '@/components/PremiumLoader';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -163,11 +164,7 @@ const Equipe: React.FC = () => {
 
           <TabsContent value="kanban" className="mt-6">
             {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-pulse text-muted-foreground">
-                  Carregando equipe...
-                </div>
-              </div>
+              <PremiumLoader message="Carregando equipe" variant="table" />
             ) : users.length === 0 ? (
               <div className="text-center py-12">
                 <Users className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />

@@ -110,6 +110,9 @@ export const useTeamStats = (selectedDate: Date = new Date()) => {
           const registroParcelado = registroRegs
             .filter((r) => r.forma_pagamento === 'parcelado')
             .reduce((sum, r) => sum + r.quantidade, 0);
+          const registroPromocao = registroRegs
+            .filter((r) => r.forma_pagamento === 'promocao')
+            .reduce((sum, r) => sum + r.quantidade, 0);
           const registroTotal = registroAvista + registroParcelado;
 
           const publicacaoAvista = publicacaoRegs
@@ -119,7 +122,7 @@ export const useTeamStats = (selectedDate: Date = new Date()) => {
             .filter((r) => r.forma_pagamento === 'parcelado')
             .reduce((sum, r) => sum + r.quantidade, 0);
 
-          const registroBonus = calculateRegistroBonus(registroTotal, registroAvista, registroParcelado);
+          const registroBonus = calculateRegistroBonus(registroTotal, registroAvista, registroParcelado, registroPromocao);
           const publicacaoBonus = calculatePublicacaoBonus(publicacaoAvista, publicacaoParcelado);
 
           return {

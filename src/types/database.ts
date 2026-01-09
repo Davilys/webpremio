@@ -58,7 +58,7 @@ export const PUBLICATION_TYPE_LABELS: Record<PublicationType, string> = {
 export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
   avista: 'À Vista',
   parcelado: 'Parcelado',
-  promocao: 'Promoção',
+  promocao: 'Valor Personalizado',
 };
 
 // ==========================================

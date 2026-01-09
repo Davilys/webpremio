@@ -64,20 +64,24 @@ export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
 // ==========================================
 // REGRAS DE PREMIAÇÃO - REGISTRO DE MARCA
 // ==========================================
-// Meta mensal: 30 registros
-// Antes da meta: R$ 50,00 por registro (qualquer forma de pagamento)
+// Registro de Marca (à vista/parcelado): R$ 25,00 por registro
+// Valor Personalizado (promoção): R$ 50,00 por registro
+// Meta mensal: 30 registros (para dobrar à vista)
 // Após a meta (>= 30):
-//   - À vista: R$ 100,00 por registro
-//   - Parcelado: R$ 50,00 por registro (nunca dobra)
+//   - À vista: R$ 50,00 por registro (dobra)
+//   - Parcelado: R$ 25,00 por registro (nunca dobra)
 // ==========================================
 
 export const BONUS_GOAL = 30;
-export const BONUS_VALUE_STANDARD = 50; // Valor padrão por registro
-export const BONUS_VALUE_AVISTA_AFTER_GOAL = 100; // Valor à vista após meta
+export const BONUS_VALUE_REGISTRO = 25; // Valor padrão por registro de marca
+export const BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL = 50; // Valor à vista após meta
+export const BONUS_VALUE_PROMOCAO = 50; // Valor por registro com valor personalizado
 
 // Aliases para compatibilidade
-export const BONUS_VALUE_BELOW_GOAL = BONUS_VALUE_STANDARD;
-export const BONUS_VALUE_AT_GOAL = BONUS_VALUE_AVISTA_AFTER_GOAL;
+export const BONUS_VALUE_STANDARD = BONUS_VALUE_REGISTRO;
+export const BONUS_VALUE_BELOW_GOAL = BONUS_VALUE_REGISTRO;
+export const BONUS_VALUE_AT_GOAL = BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL;
+export const BONUS_VALUE_AVISTA_AFTER_GOAL = BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL;
 
 export const PAYMENT_VALUES = {
   registro: {
@@ -94,22 +98,27 @@ export const PAYMENT_VALUES = {
 export const calculateRegistroBonus = (
   totalQuantity: number,
   avistaQuantity: number,
-  parceladoQuantity: number
-): { total: number; avistaValue: number; parceladoValue: number; goalReached: boolean } => {
+  parceladoQuantity: number,
+  promocaoQuantity: number = 0
+): { total: number; avistaValue: number; parceladoValue: number; promocaoValue: number; goalReached: boolean } => {
   const goalReached = totalQuantity >= BONUS_GOAL;
   
-  // Valor por unidade à vista: R$100 se meta atingida, senão R$50
-  const avistaUnitValue = goalReached ? BONUS_VALUE_AVISTA_AFTER_GOAL : BONUS_VALUE_STANDARD;
-  // Parcelado sempre R$50, nunca dobra
-  const parceladoUnitValue = BONUS_VALUE_STANDARD;
+  // Valor por unidade à vista: R$50 se meta atingida, senão R$25
+  const avistaUnitValue = goalReached ? BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL : BONUS_VALUE_REGISTRO;
+  // Parcelado sempre R$25, nunca dobra
+  const parceladoUnitValue = BONUS_VALUE_REGISTRO;
+  // Promoção sempre R$50
+  const promocaoUnitValue = BONUS_VALUE_PROMOCAO;
   
   const avistaValue = avistaQuantity * avistaUnitValue;
   const parceladoValue = parceladoQuantity * parceladoUnitValue;
+  const promocaoValue = promocaoQuantity * promocaoUnitValue;
   
   return {
-    total: avistaValue + parceladoValue,
+    total: avistaValue + parceladoValue + promocaoValue,
     avistaValue,
     parceladoValue,
+    promocaoValue,
     goalReached,
   };
 };

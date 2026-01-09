@@ -70,9 +70,10 @@ const Dashboard: React.FC = () => {
   const totalGeral = registroTotal + publicacaoTotal;
 
   const registroBonus = calculateRegistroBonus(
-    registroData.total,
+    registroData.totalParaMeta,
     registroData.avista,
-    registroData.parcelado
+    registroData.parcelado,
+    registroData.promocao
   );
   const publicacaoBonus = calculatePublicacaoBonus(
     publicacaoData.avista,
@@ -173,10 +174,10 @@ const Dashboard: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <PremiumStatsCard
                     title="Registros de Marca"
-                    value={registroTotal}
-                    subtitle={`Meta: ${BONUS_GOAL} | À vista: ${registroData.avista}`}
+                    value={registroData.total}
+                    subtitle={`Meta: ${BONUS_GOAL} | Personalizado: ${registroData.promocao}`}
                     icon={Bookmark}
-                    variant={registroTotal >= BONUS_GOAL ? 'success' : 'primary'}
+                    variant={registroData.totalParaMeta >= BONUS_GOAL ? 'success' : 'primary'}
                     delay={0}
                   />
                   <PremiumStatsCard
@@ -231,6 +232,7 @@ const Dashboard: React.FC = () => {
                       icon={<Bookmark className="w-5 h-5 text-background" />}
                       avistaQuantity={registroData.avista}
                       parceladoQuantity={registroData.parcelado}
+                      promocaoQuantity={registroData.promocao}
                       monthYear={monthYear}
                     />
                   </motion.div>
@@ -277,9 +279,9 @@ const Dashboard: React.FC = () => {
                           <span className="font-medium text-sm">Registros</span>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold">{registroTotal} / {BONUS_GOAL}</p>
+                          <p className="font-bold">{registroData.totalParaMeta} / {BONUS_GOAL}</p>
                           <p className="text-xs text-muted-foreground">
-                            {registroTotal >= BONUS_GOAL ? '✓ Meta atingida' : `Faltam ${BONUS_GOAL - registroTotal}`}
+                            {registroData.totalParaMeta >= BONUS_GOAL ? '✓ Meta atingida' : `Faltam ${BONUS_GOAL - registroData.totalParaMeta}`}
                           </p>
                         </div>
                       </div>

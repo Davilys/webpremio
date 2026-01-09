@@ -26,10 +26,9 @@ const PerformanceFunnel: React.FC<PerformanceFunnelProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
+      transition={{ duration: 0.4, delay: 0.3 }}
       className={cn(
         "bg-card rounded-2xl p-6 border border-border/50",
-        "shadow-[0_4px_24px_-4px_hsl(210_60%_15%/0.08)]",
         className
       )}
     >
@@ -37,7 +36,7 @@ const PerformanceFunnel: React.FC<PerformanceFunnelProps> = ({
       
       <div className="space-y-3">
         {stages.map((stage, index) => {
-          const widthPercent = (stage.value / maxValue) * 100;
+          const widthPercent = maxValue > 0 ? (stage.value / maxValue) * 100 : 0;
           const isLast = index === stages.length - 1;
           
           return (
@@ -57,7 +56,7 @@ const PerformanceFunnel: React.FC<PerformanceFunnelProps> = ({
               </div>
               
               <div className="relative">
-                <div className="h-10 bg-muted/50 rounded-lg overflow-hidden">
+                <div className="h-8 bg-secondary rounded-lg overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${widthPercent}%` }}
@@ -69,14 +68,16 @@ const PerformanceFunnel: React.FC<PerformanceFunnelProps> = ({
                     className="h-full rounded-lg flex items-center justify-end pr-3"
                     style={{ backgroundColor: stage.color }}
                   >
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3 * index + 0.8 }}
-                      className="text-xs font-semibold text-white drop-shadow-sm"
-                    >
-                      {widthPercent.toFixed(0)}%
-                    </motion.span>
+                    {widthPercent > 20 && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 * index + 0.8 }}
+                        className="text-xs font-semibold text-white"
+                      >
+                        {widthPercent.toFixed(0)}%
+                      </motion.span>
+                    )}
                   </motion.div>
                 </div>
               </div>
@@ -92,7 +93,7 @@ const PerformanceFunnel: React.FC<PerformanceFunnelProps> = ({
       </div>
 
       {/* Conversion Rate */}
-      {stages.length >= 2 && (
+      {stages.length >= 2 && stages[0].value > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

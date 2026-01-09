@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { FileText, MoreHorizontal } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 interface Registration {
   id: string;
@@ -28,15 +28,14 @@ const RecentRegistrationsTable: React.FC<RecentRegistrationsTableProps> = ({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        transition={{ duration: 0.4, delay: 0.4 }}
         className={cn(
           "bg-card rounded-2xl p-8 border border-border/50 text-center",
-          "shadow-[0_4px_24px_-4px_hsl(210_60%_15%/0.08)]",
           className
         )}
       >
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center">
             <FileText className="w-8 h-8 text-muted-foreground" />
           </div>
           <div>
@@ -56,17 +55,16 @@ const RecentRegistrationsTable: React.FC<RecentRegistrationsTableProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
+      transition={{ duration: 0.4, delay: 0.4 }}
       className={cn(
         "bg-card rounded-2xl border border-border/50 overflow-hidden",
-        "shadow-[0_4px_24px_-4px_hsl(210_60%_15%/0.08)]",
         className
       )}
     >
       <div className="p-6 border-b border-border/50">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-foreground">Últimos Cadastros</h3>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-muted-foreground px-2 py-1 bg-secondary rounded-lg">
             {registrations.length} registros
           </span>
         </div>
@@ -75,7 +73,7 @@ const RecentRegistrationsTable: React.FC<RecentRegistrationsTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-border/50 bg-muted/30">
+            <tr className="border-b border-border/50 bg-secondary/30">
               <th className="text-left py-3 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Cliente
               </th>
@@ -102,8 +100,8 @@ const RecentRegistrationsTable: React.FC<RecentRegistrationsTableProps> = ({
                 key={reg.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index + 0.5 }}
-                className="border-b border-border/30 hover:bg-muted/20 transition-colors duration-200"
+                transition={{ delay: 0.05 * index + 0.5 }}
+                className="border-b border-border/30 hover:bg-secondary/30 transition-colors duration-150"
               >
                 <td className="py-4 px-6">
                   <span className="font-medium text-foreground">
@@ -116,7 +114,7 @@ const RecentRegistrationsTable: React.FC<RecentRegistrationsTableProps> = ({
                 <td className="py-4 px-6">
                   <span
                     className={cn(
-                      "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold",
+                      "inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium",
                       reg.tipo_premiacao === 'registro'
                         ? 'bg-primary/10 text-primary'
                         : 'bg-accent/10 text-accent'
@@ -128,12 +126,12 @@ const RecentRegistrationsTable: React.FC<RecentRegistrationsTableProps> = ({
                 <td className="py-4 px-6">
                   <span
                     className={cn(
-                      "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold",
+                      "inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium",
                       reg.forma_pagamento === 'avista'
                         ? 'bg-success/10 text-success'
                         : reg.forma_pagamento === 'parcelado'
                         ? 'bg-warning/10 text-warning'
-                        : 'bg-muted text-muted-foreground'
+                        : 'bg-secondary text-muted-foreground'
                     )}
                   >
                     {reg.forma_pagamento === 'avista' 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,79 +6,87 @@
 
 @layer base {
   :root {
-    --background: 210 25% 97%;
-    --foreground: 210 50% 10%;
+    /* Zionic-inspired Light Theme - Clean & Modern */
+    --background: 0 0% 100%;
+    --foreground: 220 20% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 50% 10%;
+    --card-foreground: 220 20% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 50% 10%;
+    --popover-foreground: 220 20% 10%;
 
-    --primary: 199 100% 48%;
+    /* Primary - Dark/Black accent like Zionic */
+    --primary: 220 20% 12%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 199 30% 94%;
-    --secondary-foreground: 199 50% 25%;
+    /* Secondary - Light gray */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 20% 20%;
 
-    --muted: 199 20% 94%;
-    --muted-foreground: 199 15% 45%;
+    /* Muted - Soft grays */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 199 100% 40%;
+    /* Accent - Green like Zionic's WhatsApp integration */
+    --accent: 142 70% 45%;
     --accent-foreground: 0 0% 100%;
 
+    /* Status colors */
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --success: 152 69% 45%;
+    --success: 142 70% 45%;
     --success-foreground: 0 0% 100%;
 
-    --border: 199 20% 88%;
-    --input: 199 20% 88%;
-    --ring: 199 100% 48%;
+    /* Borders - Very subtle */
+    --border: 220 14% 90%;
+    --input: 220 14% 90%;
+    --ring: 220 20% 12%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 210 60% 12%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 199 100% 50%;
-    --sidebar-primary-foreground: 210 60% 10%;
-    --sidebar-accent: 210 50% 20%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 210 50% 18%;
-    --sidebar-ring: 199 100% 50%;
+    /* Sidebar - Dark like Zionic dashboard */
+    --sidebar-background: 220 20% 10%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 142 70% 50%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 15% 18%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 142 70% 50%;
 
-    /* WebMarcas gradients - Cyan/Blue */
-    --gradient-primary: linear-gradient(135deg, hsl(199, 100%, 50%) 0%, hsl(199, 100%, 40%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(199, 100%, 45%) 0%, hsl(210, 100%, 40%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(199, 30%, 98%) 100%);
-    --gradient-sidebar: linear-gradient(180deg, hsl(210, 60%, 12%) 0%, hsl(210, 70%, 8%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(210, 60%, 8%) 0%, hsl(210, 50%, 15%) 50%, hsl(199, 80%, 20%) 100%);
+    /* Gradients - Minimal, clean */
+    --gradient-primary: linear-gradient(135deg, hsl(220, 20%, 10%) 0%, hsl(220, 20%, 20%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(142, 70%, 45%) 0%, hsl(142, 70%, 35%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 14%, 99%) 100%);
+    --gradient-sidebar: linear-gradient(180deg, hsl(220, 20%, 10%) 0%, hsl(220, 25%, 6%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 14%, 98%) 100%);
   }
 
   .dark {
-    --background: 210 60% 6%;
-    --foreground: 0 0% 95%;
+    --background: 220 25% 6%;
+    --foreground: 0 0% 98%;
 
-    --card: 210 50% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 220 20% 10%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 210 50% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 220 20% 10%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 199 100% 50%;
-    --primary-foreground: 210 60% 10%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 220 20% 10%;
 
-    --secondary: 210 30% 18%;
+    --secondary: 220 15% 15%;
     --secondary-foreground: 0 0% 90%;
 
-    --muted: 210 25% 16%;
-    --muted-foreground: 210 15% 55%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 199 100% 45%;
+    --accent: 142 70% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 55%;
@@ -87,21 +95,21 @@
     --warning: 38 92% 55%;
     --warning-foreground: 0 0% 100%;
 
-    --success: 152 69% 50%;
+    --success: 142 70% 50%;
     --success-foreground: 0 0% 100%;
 
-    --border: 210 30% 20%;
-    --input: 210 30% 20%;
-    --ring: 199 100% 50%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 142 70% 50%;
 
-    --sidebar-background: 210 70% 6%;
+    --sidebar-background: 220 25% 4%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 199 100% 50%;
-    --sidebar-primary-foreground: 210 60% 10%;
-    --sidebar-accent: 210 50% 15%;
+    --sidebar-primary: 142 70% 50%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 20% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 210 50% 14%;
-    --sidebar-ring: 199 100% 50%;
+    --sidebar-border: 220 20% 12%;
+    --sidebar-ring: 142 70% 50%;
   }
 }
 
@@ -112,7 +120,7 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
@@ -138,34 +146,62 @@
   }
 
   .glass-effect {
-    @apply backdrop-blur-lg bg-card/80 border border-border/50;
+    @apply backdrop-blur-xl bg-card/80 border border-border/50;
   }
 
+  /* Zionic-style shadows - subtle and clean */
   .card-shadow {
-    box-shadow: 0 4px 24px -4px hsl(210 60% 15% / 0.08), 
-                0 2px 8px -2px hsl(210 60% 15% / 0.04);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 
+                0 1px 2px -1px rgb(0 0 0 / 0.05);
   }
 
   .card-shadow-hover {
-    box-shadow: 0 8px 32px -4px hsl(210 60% 15% / 0.12), 
-                0 4px 12px -2px hsl(210 60% 15% / 0.06);
+    box-shadow: 0 10px 40px -10px rgb(0 0 0 / 0.1), 
+                0 4px 12px -2px rgb(0 0 0 / 0.05);
   }
 
+  .card-shadow-lg {
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+  }
+
+  /* Animations */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.4s ease-out;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .animate-scale-in {
-    animation: scaleIn 0.2s ease-out;
+    animation: scaleIn 0.3s ease-out;
   }
 
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Text gradient - Zionic style */
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: var(--gradient-primary);
+    background-image: linear-gradient(135deg, hsl(220, 20%, 10%) 0%, hsl(220, 15%, 30%) 100%);
+  }
+
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(142, 70%, 45%) 0%, hsl(142, 70%, 35%) 100%);
+  }
+
+  /* Dotted background pattern like Zionic */
+  .dotted-bg {
+    background-image: radial-gradient(circle, hsl(220, 14%, 85%) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Status dot animation */
+  .status-dot {
+    @apply w-2 h-2 rounded-full bg-success;
+    animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
 
@@ -181,7 +217,7 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -200,16 +236,44 @@
   }
 }
 
-/* Custom scrollbar */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Custom scrollbar - Minimal like Zionic */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-muted/50 rounded-full;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30 transition-colors;
+}
+
+/* Hide scrollbar for certain elements */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

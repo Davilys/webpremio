@@ -31,7 +31,7 @@ interface DashboardTabsProps {
 const DashboardTabs: React.FC<DashboardTabsProps> = ({ activeTab, onTabChange }) => {
   return (
     <div className="relative">
-      <div className="flex gap-1 p-1 bg-muted/50 rounded-xl overflow-x-auto scrollbar-hide">
+      <div className="flex gap-1 p-1 bg-secondary/50 rounded-xl overflow-x-auto scrollbar-hide border border-border/50">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const TabIcon = tab.icon;
@@ -52,7 +52,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({ activeTab, onTabChange })
               {isActive && (
                 <motion.div
                   layoutId="activeTabBg"
-                  className="absolute inset-0 bg-card rounded-lg shadow-sm"
+                  className="absolute inset-0 bg-card rounded-lg shadow-sm border border-border/50"
                   initial={false}
                   transition={{
                     type: 'spring',

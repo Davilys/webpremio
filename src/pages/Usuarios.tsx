@@ -37,6 +37,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, UserRole } from '@/types/database';
 import { Users, Plus, Trash2, ShieldCheck, User, Mail, Lock, Edit2 } from 'lucide-react';
+import PremiumLoader from '@/components/PremiumLoader';
 import { format } from 'date-fns';
 import { z } from 'zod';
 
@@ -429,11 +430,7 @@ const Usuarios: React.FC = () => {
         {/* Users Table */}
         <div className="bg-card rounded-xl p-6 card-shadow">
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-pulse text-muted-foreground">
-                Carregando usuários...
-              </div>
-            </div>
+            <PremiumLoader message="Carregando usuários" variant="table" />
           ) : users.length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />

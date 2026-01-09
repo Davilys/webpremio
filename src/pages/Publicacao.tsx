@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { FileText, Plus, Trash2 } from 'lucide-react';
+import PremiumLoader from '@/components/PremiumLoader';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Link } from 'react-router-dom';
@@ -97,11 +98,7 @@ const Publicacao: React.FC = () => {
           <h2 className="text-xl font-bold mb-4">Publicações do Mês</h2>
 
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-pulse text-muted-foreground">
-                Carregando...
-              </div>
-            </div>
+            <PremiumLoader message="Carregando publicações" variant="table" />
           ) : registrations.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />

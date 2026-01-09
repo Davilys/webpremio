@@ -15,19 +15,19 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('theme') as Theme;
-      return stored || 'dark'; // Default to dark like Zionic
+      return stored || 'light'; // Default to light mode
     }
-    return 'dark';
+    return 'light';
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('dark');
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
   // Get system preference
   const getSystemTheme = (): 'light' | 'dark' => {
     if (typeof window !== 'undefined') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
-    return 'dark';
+    return 'light';
   };
 
   // Update resolved theme based on theme setting

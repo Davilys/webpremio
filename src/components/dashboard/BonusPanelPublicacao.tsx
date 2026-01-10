@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
-import { DollarSign, CreditCard, Banknote } from 'lucide-react';
+import { DollarSign, CreditCard, Banknote, Sparkles } from 'lucide-react';
 import { 
   PUBLICACAO_BONUS_AVISTA, 
   PUBLICACAO_BONUS_PARCELADO,
+  PUBLICACAO_BONUS_PROMOCAO,
   calculatePublicacaoBonus 
 } from '@/types/database';
 
@@ -12,6 +13,7 @@ interface BonusPanelPublicacaoProps {
   icon: React.ReactNode;
   avistaQuantity: number;
   parceladoQuantity: number;
+  promocaoQuantity?: number;
   monthYear: string;
   className?: string;
 }
@@ -21,11 +23,12 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
   icon,
   avistaQuantity = 0,
   parceladoQuantity = 0,
+  promocaoQuantity = 0,
   monthYear,
   className,
 }, ref) => {
-  const totalQuantity = avistaQuantity + parceladoQuantity;
-  const bonusData = calculatePublicacaoBonus(avistaQuantity, parceladoQuantity);
+  const totalQuantity = avistaQuantity + parceladoQuantity + promocaoQuantity;
+  const bonusData = calculatePublicacaoBonus(avistaQuantity, parceladoQuantity, promocaoQuantity);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -65,14 +68,14 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
         </div>
 
         {/* Breakdown by payment method */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-3">
           <div className="p-4 rounded-lg bg-secondary/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Banknote className="w-4 h-4" />
               <span className="text-xs font-medium">À Vista</span>
             </div>
             <p className="text-lg font-bold text-foreground">
-              {avistaQuantity} <span className="text-sm font-normal text-muted-foreground">publicações</span>
+              {avistaQuantity} <span className="text-xs font-normal text-muted-foreground">pub.</span>
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               {formatCurrency(PUBLICACAO_BONUS_AVISTA)}/un
@@ -85,10 +88,23 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
               <span className="text-xs font-medium">Parcelado</span>
             </div>
             <p className="text-lg font-bold text-foreground">
-              {parceladoQuantity} <span className="text-sm font-normal text-muted-foreground">publicações</span>
+              {parceladoQuantity} <span className="text-xs font-normal text-muted-foreground">pub.</span>
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               {formatCurrency(PUBLICACAO_BONUS_PARCELADO)}/un
+            </p>
+          </div>
+
+          <div className="p-4 rounded-lg bg-accent/10 border border-accent/20">
+            <div className="flex items-center gap-2 text-accent mb-1">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-xs font-medium">Personalizado</span>
+            </div>
+            <p className="text-lg font-bold text-foreground">
+              {promocaoQuantity} <span className="text-xs font-normal text-muted-foreground">pub.</span>
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {formatCurrency(PUBLICACAO_BONUS_PROMOCAO)}/un
             </p>
           </div>
         </div>
@@ -129,6 +145,12 @@ const BonusPanelPublicacao = forwardRef<HTMLDivElement, BonusPanelPublicacaoProp
               {parceladoQuantity} parcelado × {formatCurrency(PUBLICACAO_BONUS_PARCELADO)}
             </span>
             <span className="font-medium">{formatCurrency(bonusData.parceladoValue)}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-accent">
+              {promocaoQuantity} personalizado × {formatCurrency(PUBLICACAO_BONUS_PROMOCAO)}
+            </span>
+            <span className="font-medium text-accent">{formatCurrency(bonusData.promocaoValue)}</span>
           </div>
         </div>
 

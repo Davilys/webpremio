@@ -78,7 +78,8 @@ const Dashboard: React.FC = () => {
   );
   const publicacaoBonus = calculatePublicacaoBonus(
     publicacaoData.avista,
-    publicacaoData.parcelado
+    publicacaoData.parcelado,
+    publicacaoData.promocao
   );
   
   const totalBonus = registroBonus.total + publicacaoBonus.total;
@@ -180,7 +181,7 @@ const Dashboard: React.FC = () => {
                   <PremiumStatsCard
                     title="Publicações"
                     value={publicacaoTotal}
-                    subtitle={`À vista: ${publicacaoData.avista} | Parcelado: ${publicacaoData.parcelado}`}
+                    subtitle={`À vista: ${publicacaoData.avista} | Parcelado: ${publicacaoData.parcelado} | Personalizado: ${publicacaoData.promocao}`}
                     icon={FileText}
                     variant="accent"
                     delay={0.05}
@@ -243,6 +244,7 @@ const Dashboard: React.FC = () => {
                       icon={<FileText className="w-5 h-5 text-background" />}
                       avistaQuantity={publicacaoData.avista}
                       parceladoQuantity={publicacaoData.parcelado}
+                      promocaoQuantity={publicacaoData.promocao}
                       monthYear={monthYear}
                     />
                   </motion.div>

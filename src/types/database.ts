@@ -64,17 +64,17 @@ export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
 // ==========================================
 // REGRAS DE PREMIAÇÃO - REGISTRO DE MARCA
 // ==========================================
-// Registro de Marca (à vista/parcelado): R$ 25,00 por registro
+// Registro de Marca (à vista/parcelado): R$ 50,00 por registro
 // Valor Personalizado (promoção): R$ 50,00 por registro
-// Meta mensal: 30 registros (para dobrar à vista)
-// Após a meta (>= 30):
-//   - À vista: R$ 50,00 por registro (dobra)
-//   - Parcelado: R$ 25,00 por registro (nunca dobra)
+// Meta mensal: 30 registros (só à vista conta para dobrar)
+// Após a meta (>= 30 à vista):
+//   - À vista: R$ 100,00 por registro (dobra)
+//   - Parcelado: R$ 50,00 por registro (nunca dobra)
 // ==========================================
 
 export const BONUS_GOAL = 30;
-export const BONUS_VALUE_REGISTRO = 25; // Valor padrão por registro de marca
-export const BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL = 50; // Valor à vista após meta
+export const BONUS_VALUE_REGISTRO = 50; // Valor padrão por registro de marca
+export const BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL = 100; // Valor à vista após meta
 export const BONUS_VALUE_PROMOCAO = 50; // Valor por registro com valor personalizado
 
 // Aliases para compatibilidade
@@ -101,11 +101,12 @@ export const calculateRegistroBonus = (
   parceladoQuantity: number,
   promocaoQuantity: number = 0
 ): { total: number; avistaValue: number; parceladoValue: number; promocaoValue: number; goalReached: boolean } => {
-  const goalReached = totalQuantity >= BONUS_GOAL;
+  // Meta é baseada APENAS em registros à vista
+  const goalReached = avistaQuantity >= BONUS_GOAL;
   
-  // Valor por unidade à vista: R$50 se meta atingida, senão R$25
+  // Valor por unidade à vista: R$100 se meta atingida, senão R$50
   const avistaUnitValue = goalReached ? BONUS_VALUE_REGISTRO_AVISTA_AFTER_GOAL : BONUS_VALUE_REGISTRO;
-  // Parcelado sempre R$25, nunca dobra
+  // Parcelado sempre R$50, nunca dobra
   const parceladoUnitValue = BONUS_VALUE_REGISTRO;
   // Promoção sempre R$50
   const promocaoUnitValue = BONUS_VALUE_PROMOCAO;
@@ -129,22 +130,27 @@ export const calculateRegistroBonus = (
 // SEM META - Premiação por forma de pagamento:
 //   - À vista (1 salário mínimo): R$ 100,00
 //   - Parcelado (6x R$ 398,00): R$ 50,00
+//   - Promoção: R$ 50,00
 // ==========================================
 
 export const PUBLICACAO_BONUS_AVISTA = 100;
 export const PUBLICACAO_BONUS_PARCELADO = 50;
+export const PUBLICACAO_BONUS_PROMOCAO = 50;
 
 // Calcula premiação para Publicação (sem meta, baseado apenas na forma de pagamento)
 export const calculatePublicacaoBonus = (
   avistaQuantity: number,
-  parceladoQuantity: number
-): { total: number; avistaValue: number; parceladoValue: number } => {
+  parceladoQuantity: number,
+  promocaoQuantity: number = 0
+): { total: number; avistaValue: number; parceladoValue: number; promocaoValue: number } => {
   const avistaValue = avistaQuantity * PUBLICACAO_BONUS_AVISTA;
   const parceladoValue = parceladoQuantity * PUBLICACAO_BONUS_PARCELADO;
+  const promocaoValue = promocaoQuantity * PUBLICACAO_BONUS_PROMOCAO;
   
   return {
-    total: avistaValue + parceladoValue,
+    total: avistaValue + parceladoValue + promocaoValue,
     avistaValue,
     parceladoValue,
+    promocaoValue,
   };
 };

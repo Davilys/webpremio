@@ -80,9 +80,12 @@ const EvolutionChart = forwardRef<HTMLDivElement, EvolutionChartProps>(
                 const publicacaoParcelado = publicacaoRegs
                   .filter((r) => r.forma_pagamento === 'parcelado')
                   .reduce((sum, r) => sum + r.quantidade, 0);
+                const publicacaoPromocao = publicacaoRegs
+                  .filter((r) => r.forma_pagamento === 'promocao')
+                  .reduce((sum, r) => sum + r.quantidade, 0);
 
                 const registroBonus = calculateRegistroBonus(registroTotal, registroAvista, registroParcelado, registroPromocao);
-                const publicacaoBonus = calculatePublicacaoBonus(publicacaoAvista, publicacaoParcelado);
+                const publicacaoBonus = calculatePublicacaoBonus(publicacaoAvista, publicacaoParcelado, publicacaoPromocao);
 
                 return registroBonus.total + publicacaoBonus.total;
               };

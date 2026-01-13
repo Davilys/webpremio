@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import BonusPanel from '@/components/dashboard/BonusPanel';
+import BonusPanelPublicacao from '@/components/dashboard/BonusPanelPublicacao';
 import MonthSelector from '@/components/dashboard/MonthSelector';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -28,14 +28,14 @@ import {
 const Publicacao: React.FC = () => {
   const { isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { registrations, loading, refetch, getTotalQuantity } = useRegistrations(
+  const { registrations, loading, refetch, getQuantityByPayment } = useRegistrations(
     selectedDate,
     'publicacao'
   );
   const { toast } = useToast();
 
   const monthYear = format(selectedDate, "MMMM 'de' yyyy", { locale: ptBR });
-  const totalQuantity = getTotalQuantity();
+  const publicacaoData = getQuantityByPayment('publicacao');
 
   const handleDelete = async (id: string) => {
     try {
@@ -85,10 +85,12 @@ const Publicacao: React.FC = () => {
 
         {/* Bonus Panel */}
         <div className="max-w-md">
-          <BonusPanel
+          <BonusPanelPublicacao
             title="Publicação"
             icon={<FileText className="w-6 h-6 text-primary-foreground" />}
-            totalQuantity={totalQuantity}
+            avistaQuantity={publicacaoData.avista}
+            parceladoQuantity={publicacaoData.parcelado}
+            promocaoQuantity={publicacaoData.promocao}
             monthYear={monthYear}
           />
         </div>

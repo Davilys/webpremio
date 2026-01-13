@@ -65,6 +65,12 @@ const navItems: NavItem[] = [
     icon: <Users className="w-5 h-5" />,
     adminOnly: true,
   },
+  {
+    label: 'Configurações',
+    href: '/dashboard/configuracoes',
+    icon: <Settings className="w-5 h-5" />,
+    adminOnly: true,
+  },
 ];
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {

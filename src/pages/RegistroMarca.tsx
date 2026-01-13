@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import BonusPanel from '@/components/dashboard/BonusPanel';
+import BonusPanelRegistro from '@/components/dashboard/BonusPanelRegistro';
 import MonthSelector from '@/components/dashboard/MonthSelector';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -28,14 +28,14 @@ import {
 const RegistroMarca: React.FC = () => {
   const { isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { registrations, loading, refetch, getTotalQuantity } = useRegistrations(
+  const { registrations, loading, refetch, getQuantityByPayment } = useRegistrations(
     selectedDate,
     'registro'
   );
   const { toast } = useToast();
 
   const monthYear = format(selectedDate, "MMMM 'de' yyyy", { locale: ptBR });
-  const totalQuantity = getTotalQuantity();
+  const registroData = getQuantityByPayment('registro');
 
   const handleDelete = async (id: string) => {
     try {
@@ -85,10 +85,12 @@ const RegistroMarca: React.FC = () => {
 
         {/* Bonus Panel */}
         <div className="max-w-md">
-          <BonusPanel
+          <BonusPanelRegistro
             title="Registro de Marca"
             icon={<Bookmark className="w-6 h-6 text-primary-foreground" />}
-            totalQuantity={totalQuantity}
+            avistaQuantity={registroData.avista}
+            parceladoQuantity={registroData.parcelado}
+            promocaoQuantity={registroData.promocao}
             monthYear={monthYear}
           />
         </div>

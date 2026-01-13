@@ -99,8 +99,8 @@ export const useRegistrations = (
       .filter((r) => r.forma_pagamento === 'promocao')
       .reduce((sum, r) => sum + r.quantidade, 0);
     
-    // Total para meta = avista + parcelado (promocao não conta para meta)
-    const totalParaMeta = avista + parcelado;
+    // Total para meta = APENAS avista (parcelado e promocao NÃO contam para meta)
+    const totalParaMeta = avista;
     // Total geral = todos os tipos
     const total = avista + parcelado + promocao;
     

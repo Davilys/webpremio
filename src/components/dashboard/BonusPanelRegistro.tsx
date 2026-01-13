@@ -29,10 +29,10 @@ const BonusPanelRegistro = forwardRef<HTMLDivElement, BonusPanelRegistroProps>((
   monthYear,
   className,
 }, ref) => {
-  // Total para meta = apenas à vista + parcelado
-  const totalParaMeta = avistaQuantity + parceladoQuantity;
-  const bonusData = calculateRegistroBonus(totalParaMeta, avistaQuantity, parceladoQuantity, promocaoQuantity);
-  const progress = Math.min((totalParaMeta / BONUS_GOAL) * 100, 100);
+  // Total para meta = APENAS à vista (parcelado e promocao NÃO contam)
+  const totalParaMeta = avistaQuantity;
+  const bonusData = calculateRegistroBonus(avistaQuantity + parceladoQuantity + promocaoQuantity, avistaQuantity, parceladoQuantity, promocaoQuantity);
+  const progress = Math.min((avistaQuantity / BONUS_GOAL) * 100, 100);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {

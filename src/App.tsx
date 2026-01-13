@@ -19,6 +19,7 @@ const RegistroMarca = lazy(() => import("./pages/RegistroMarca"));
 const Publicacao = lazy(() => import("./pages/Publicacao"));
 const Usuarios = lazy(() => import("./pages/Usuarios"));
 const Equipe = lazy(() => import("./pages/Equipe"));
+const Configuracoes = lazy(() => import("./pages/Configuracoes"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -130,6 +131,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <PageWrapper><Equipe /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/configuracoes"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><Configuracoes /></PageWrapper>
             </ProtectedRoute>
           }
         />

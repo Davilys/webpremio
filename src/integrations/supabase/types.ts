@@ -95,6 +95,72 @@ export type Database = {
         }
         Relationships: []
       }
+      system_settings: {
+        Row: {
+          description: string | null
+          id: string
+          key: string
+          updated_at: string | null
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
+      user_permissions: {
+        Row: {
+          can_create_publicacao: boolean | null
+          can_create_registro: boolean | null
+          can_view_dashboard: boolean | null
+          can_view_equipe: boolean | null
+          can_view_publicacao: boolean | null
+          can_view_registro: boolean | null
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          can_create_publicacao?: boolean | null
+          can_create_registro?: boolean | null
+          can_view_dashboard?: boolean | null
+          can_view_equipe?: boolean | null
+          can_view_publicacao?: boolean | null
+          can_view_registro?: boolean | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          can_create_publicacao?: boolean | null
+          can_create_registro?: boolean | null
+          can_view_dashboard?: boolean | null
+          can_view_equipe?: boolean | null
+          can_view_publicacao?: boolean | null
+          can_view_registro?: boolean | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

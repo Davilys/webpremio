@@ -4,6 +4,7 @@ import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import BonusPanelPublicacao from '@/components/dashboard/BonusPanelPublicacao';
 import MonthSelector from '@/components/dashboard/MonthSelector';
+import { EditRegistrationModal, canEditRegistration } from '@/components/EditRegistrationModal';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -142,11 +143,9 @@ const Publicacao: React.FC = () => {
                         Funcionário
                       </th>
                     )}
-                    {isAdmin && (
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">
-                        Ações
-                      </th>
-                    )}
+                    <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">
+                      Ações
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -178,9 +177,14 @@ const Publicacao: React.FC = () => {
                           {reg.profiles?.nome || 'N/A'}
                         </td>
                       )}
-                      {isAdmin && (
-                        <td className="py-3 px-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <EditRegistrationModal
+                            registration={reg}
+                            type="publicacao"
+                            onSuccess={refetch}
+                          />
+                          {isAdmin && (
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <Button variant="ghost" size="icon">
@@ -208,9 +212,9 @@ const Publicacao: React.FC = () => {
                                 </AlertDialogFooter>
                               </AlertDialogContent>
                             </AlertDialog>
-                          </div>
-                        </td>
-                      )}
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

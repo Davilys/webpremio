@@ -4,7 +4,7 @@ import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import BonusPanelRegistro from '@/components/dashboard/BonusPanelRegistro';
 import MonthSelector from '@/components/dashboard/MonthSelector';
-import { EditRegistrationModal, canEditRegistration } from '@/components/EditRegistrationModal';
+import { EditRegistrationModal } from '@/components/EditRegistrationModal';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';

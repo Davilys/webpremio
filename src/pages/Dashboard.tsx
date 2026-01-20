@@ -14,6 +14,7 @@ import RecentRegistrationsTable from '@/components/dashboard/RecentRegistrations
 import WelcomePopup from '@/components/dashboard/WelcomePopup';
 import SkeletonLoader from '@/components/dashboard/SkeletonLoader';
 import PremiumLoader from '@/components/PremiumLoader';
+import { Button } from '@/components/ui/button';
 import { 
   Bookmark, 
   FileText, 
@@ -60,7 +61,7 @@ const Dashboard: React.FC = () => {
     return motivationalQuotes[randomIndex];
   }, []);
 
-  const { registrations, loading, getQuantityByPayment } = useRegistrations(selectedDate);
+  const { registrations, loading, error, getQuantityByPayment } = useRegistrations(selectedDate);
 
   const registroData = getQuantityByPayment('registro');
   const registroTotal = registroData.total;
@@ -156,6 +157,23 @@ const Dashboard: React.FC = () => {
             className="space-y-6"
           >
             <PremiumLoader message="Carregando dados do dashboard" variant="card" className="min-h-[400px]" />
+          </motion.div>
+        ) : error ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center justify-center py-20"
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-destructive/10 flex items-center justify-center">
+                <TrendingUp className="w-8 h-8 text-destructive" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">Erro ao carregar dados</h3>
+              <p className="text-sm text-muted-foreground mb-4">{error}</p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Tentar Novamente
+              </Button>
+            </div>
           </motion.div>
         ) : (
           <AnimatePresence mode="wait">

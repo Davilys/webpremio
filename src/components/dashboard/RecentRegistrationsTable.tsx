@@ -147,7 +147,13 @@ const RecentRegistrationsTable: React.FC<RecentRegistrationsTableProps> = ({
                   </span>
                 </td>
                 <td className="py-4 px-6 text-sm text-muted-foreground">
-                  {format(new Date(reg.data_referencia), 'dd/MM/yyyy')}
+                  {(() => {
+                    try {
+                      return format(new Date(reg.data_referencia + 'T00:00:00'), 'dd/MM/yyyy');
+                    } catch {
+                      return reg.data_referencia;
+                    }
+                  })()}
                 </td>
               </motion.tr>
             ))}

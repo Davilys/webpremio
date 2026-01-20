@@ -51,6 +51,7 @@ export type Database = {
           nome_marca: string
           observacoes: string | null
           quantidade: number
+          quantidade_parcelas: number | null
           tipo_premiacao: Database["public"]["Enums"]["bonus_type"]
           tipo_publicacao:
             | Database["public"]["Enums"]["publication_type"]
@@ -58,6 +59,7 @@ export type Database = {
           updated_at: string
           user_id: string
           valor_promocao: number | null
+          valor_resolvido: number | null
         }
         Insert: {
           created_at?: string
@@ -68,6 +70,7 @@ export type Database = {
           nome_marca: string
           observacoes?: string | null
           quantidade: number
+          quantidade_parcelas?: number | null
           tipo_premiacao: Database["public"]["Enums"]["bonus_type"]
           tipo_publicacao?:
             | Database["public"]["Enums"]["publication_type"]
@@ -75,6 +78,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           valor_promocao?: number | null
+          valor_resolvido?: number | null
         }
         Update: {
           created_at?: string
@@ -85,6 +89,7 @@ export type Database = {
           nome_marca?: string
           observacoes?: string | null
           quantidade?: number
+          quantidade_parcelas?: number | null
           tipo_premiacao?: Database["public"]["Enums"]["bonus_type"]
           tipo_publicacao?:
             | Database["public"]["Enums"]["publication_type"]
@@ -92,6 +97,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           valor_promocao?: number | null
+          valor_resolvido?: number | null
         }
         Relationships: []
       }
@@ -197,7 +203,7 @@ export type Database = {
       }
     }
     Enums: {
-      bonus_type: "registro" | "publicacao"
+      bonus_type: "registro" | "publicacao" | "devedores"
       payment_method: "avista" | "parcelado" | "promocao"
       publication_type:
         | "exigencia_merito"
@@ -335,7 +341,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      bonus_type: ["registro", "publicacao"],
+      bonus_type: ["registro", "publicacao", "devedores"],
       payment_method: ["avista", "parcelado", "promocao"],
       publication_type: [
         "exigencia_merito",

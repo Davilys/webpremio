@@ -17,6 +17,8 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const NovoRegistro = lazy(() => import("./pages/NovoRegistro"));
 const RegistroMarca = lazy(() => import("./pages/RegistroMarca"));
 const Publicacao = lazy(() => import("./pages/Publicacao"));
+const Devedores = lazy(() => import("./pages/Devedores"));
+const NovoDevedor = lazy(() => import("./pages/NovoDevedor"));
 const Usuarios = lazy(() => import("./pages/Usuarios"));
 const Equipe = lazy(() => import("./pages/Equipe"));
 const Configuracoes = lazy(() => import("./pages/Configuracoes"));
@@ -115,6 +117,22 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <PageWrapper><Publicacao /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/devedores"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><Devedores /></PageWrapper>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/novo-devedor"
+          element={
+            <ProtectedRoute>
+              <PageWrapper><NovoDevedor /></PageWrapper>
             </ProtectedRoute>
           }
         />

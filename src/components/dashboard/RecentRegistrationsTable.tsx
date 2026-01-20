@@ -8,7 +8,7 @@ interface Registration {
   id: string;
   nome_cliente: string;
   nome_marca: string;
-  tipo_premiacao: 'registro' | 'publicacao';
+  tipo_premiacao: 'registro' | 'publicacao' | 'devedores';
   forma_pagamento: 'avista' | 'parcelado' | 'promocao';
   quantidade: number;
   data_referencia: string;

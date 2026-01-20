@@ -23,6 +23,7 @@ import {
   Zap,
   MessageSquare,
   Bell,
+  Wallet,
 } from 'lucide-react';
 
 interface NavItem {
@@ -63,6 +64,13 @@ const navItems: NavItem[] = [
     href: '/dashboard/publicacao',
     icon: <FileText className="w-5 h-5" />,
     iconColor: 'text-accent',
+  },
+  {
+    label: 'Devedores',
+    subtitle: 'Valores resolvidos',
+    href: '/dashboard/devedores',
+    icon: <Wallet className="w-5 h-5" />,
+    iconColor: 'text-amber-500',
   },
   {
     label: 'Equipe',

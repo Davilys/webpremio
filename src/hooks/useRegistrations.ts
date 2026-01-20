@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Registration, BonusType, RegistrationWithProfile, Profile } from '@/types/database';
@@ -13,9 +13,25 @@ export const useRegistrations = (
   const [registrations, setRegistrations] = useState<RegistrationWithProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Use refs to avoid unnecessary re-renders when dependencies change
+  const userIdRef = useRef(user?.id);
+  const isAdminRef = useRef(isAdmin);
+  
+  // Update refs when values change
+  useEffect(() => {
+    userIdRef.current = user?.id;
+    isAdminRef.current = isAdmin;
+  }, [user?.id, isAdmin]);
 
-  const fetchRegistrations = async () => {
-    if (!user) return;
+  const fetchRegistrations = useCallback(async () => {
+    const currentUserId = userIdRef.current;
+    
+    if (!currentUserId) {
+      setLoading(false);
+      setRegistrations([]);
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -37,8 +53,8 @@ export const useRegistrations = (
 
       if (userId) {
         query = query.eq('user_id', userId);
-      } else if (!isAdmin) {
-        query = query.eq('user_id', user.id);
+      } else if (!isAdminRef.current) {
+        query = query.eq('user_id', currentUserId);
       }
 
       const { data, error: fetchError } = await query;
@@ -48,7 +64,7 @@ export const useRegistrations = (
       // Fetch profiles separately for admin view
       let registrationsWithProfiles: RegistrationWithProfile[] = (data || []) as Registration[];
       
-      if (isAdmin && data && data.length > 0) {
+      if (isAdminRef.current && data && data.length > 0) {
         const userIds = [...new Set(data.map(r => r.user_id))];
         const { data: profilesData } = await supabase
           .from('profiles')
@@ -66,25 +82,33 @@ export const useRegistrations = (
 
       setRegistrations(registrationsWithProfiles);
     } catch (err) {
+      console.error('Error fetching registrations:', err);
       setError(err instanceof Error ? err.message : 'Erro ao carregar dados');
+      setRegistrations([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedDate, bonusType, userId]);
 
+  // Fetch when dependencies change, but use stable reference for user
   useEffect(() => {
-    fetchRegistrations();
-  }, [selectedDate, bonusType, userId, user, isAdmin]);
+    if (user?.id) {
+      fetchRegistrations();
+    } else {
+      setLoading(false);
+      setRegistrations([]);
+    }
+  }, [fetchRegistrations, user?.id]);
 
-  const getTotalQuantity = (type?: BonusType) => {
+  const getTotalQuantity = useCallback((type?: BonusType) => {
     const filtered = type
       ? registrations.filter((r) => r.tipo_premiacao === type)
       : registrations;
     return filtered.reduce((sum, r) => sum + r.quantidade, 0);
-  };
+  }, [registrations]);
 
-  // Nova função: obter quantidade por tipo de premiação E forma de pagamento
-  const getQuantityByPayment = (type: BonusType) => {
+  // Memoized function to get quantities by payment type
+  const getQuantityByPayment = useCallback((type: BonusType) => {
     const filtered = registrations.filter((r) => r.tipo_premiacao === type);
     
     const avista = filtered
@@ -105,7 +129,7 @@ export const useRegistrations = (
     const total = avista + parcelado + promocao;
     
     return { avista, parcelado, promocao, totalParaMeta, total };
-  };
+  }, [registrations]);
 
   return {
     registrations,

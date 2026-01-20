@@ -170,7 +170,13 @@ const Publicacao: React.FC = () => {
                         {PAYMENT_METHOD_LABELS[reg.forma_pagamento]}
                       </td>
                       <td className="py-3 px-4 text-sm text-muted-foreground">
-                        {format(new Date(reg.data_referencia), 'dd/MM/yyyy')}
+                        {(() => {
+                          try {
+                            return format(new Date(reg.data_referencia + 'T00:00:00'), 'dd/MM/yyyy');
+                          } catch {
+                            return reg.data_referencia;
+                          }
+                        })()}
                       </td>
                       {isAdmin && (
                         <td className="py-3 px-4 text-sm">

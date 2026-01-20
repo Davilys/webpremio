@@ -4,8 +4,7 @@ import { Wallet, DollarSign, Receipt, TrendingUp } from 'lucide-react';
 import { 
   DEVEDORES_BONUS_TIER_1,
   DEVEDORES_BONUS_TIER_2,
-  DEVEDORES_BONUS_TIER_3,
-  DEVEDORES_BONUS_TIER_4
+  DEVEDORES_BONUS_TIER_3
 } from '@/types/database';
 
 interface BonusPanelDevedoresProps {
@@ -82,22 +81,18 @@ const BonusPanelDevedores = forwardRef<HTMLDivElement, BonusPanelDevedoresProps>
         {/* Faixas de Premiação */}
         <div className="space-y-2 p-4 rounded-lg bg-muted/30">
           <p className="text-sm font-medium text-muted-foreground mb-3">Faixas de Premiação por Parcela</p>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 gap-2 text-xs">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Até R$ 598</span>
               <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_1)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">R$ 599 a R$ 900</span>
+              <span className="text-muted-foreground">R$ 599 a R$ 1.500</span>
               <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">R$ 901 a R$ 1.999</span>
+              <span className="text-muted-foreground">Acima de R$ 1.500</span>
               <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_3)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Acima de R$ 2.000</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_4)}</span>
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { LogIn, UserPlus, Mail, Lock, User, Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { z } from 'zod';
+import logoWebmarcas from '@/assets/logo-webmarcas-icon.png';
 
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -107,7 +108,7 @@ const Auth: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-foreground animate-spin" />
+        <Loader2 className="w-6 h-6 text-primary animate-spin" />
       </div>
     );
   }
@@ -121,10 +122,10 @@ const Auth: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Left Panel - Branding (Zionic style) */}
-      <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 bg-foreground relative overflow-hidden">
+      {/* Left Panel - Branding (WebMarcas Blue gradient) */}
+      <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 bg-gradient-to-br from-primary via-primary to-accent relative overflow-hidden">
         {/* Dotted pattern */}
-        <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 opacity-10">
           <div 
             className="absolute inset-0" 
             style={{ 
@@ -135,26 +136,39 @@ const Auth: React.FC = () => {
         </div>
         
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center px-12 xl:px-20 text-background">
+        <div className="relative z-10 flex flex-col justify-center px-12 xl:px-20 text-primary-foreground">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            {/* Status badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-background/10 mb-10">
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-sm font-medium text-background/80">Sistema Online</span>
+            {/* Logo */}
+            <div className="flex items-center gap-4 mb-10">
+              <img 
+                src={logoWebmarcas} 
+                alt="WebMarcas" 
+                className="w-16 h-16 object-contain"
+              />
+              <div>
+                <h2 className="text-2xl font-bold text-white">WebMarcas</h2>
+                <p className="text-white/70 text-sm">Sistema de Premiação</p>
+              </div>
             </div>
             
-            {/* Main heading - Zionic typography */}
-            <h1 className="text-4xl xl:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
-              WEBMARCAS<br />
-              <span className="text-background/60">YOUR BONUS_</span>
+            {/* Status badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 mb-10">
+              <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+              <span className="text-sm font-medium text-white/80">Sistema Online</span>
+            </div>
+            
+            {/* Main heading */}
+            <h1 className="text-4xl xl:text-5xl font-bold tracking-tight leading-[1.1] mb-6 text-white">
+              Gerencie sua<br />
+              <span className="text-white/80">equipe com eficiência</span>
             </h1>
             
-            <p className="text-lg text-background/60 max-w-md mb-12">
-              Sistema completo de gestão de premiação para sua equipe.
+            <p className="text-lg text-white/70 max-w-md mb-12">
+              Sistema completo de gestão de premiação para sua equipe de vendas.
             </p>
 
             {/* Benefits list */}
@@ -167,10 +181,10 @@ const Auth: React.FC = () => {
                   transition={{ delay: 0.4 + index * 0.1, duration: 0.4 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-3 h-3 text-accent" />
+                  <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+                    <CheckCircle2 className="w-3 h-3 text-white" />
                   </div>
-                  <span className="text-background/70 text-sm">{benefit}</span>
+                  <span className="text-white/80 text-sm">{benefit}</span>
                 </motion.div>
               ))}
             </div>
@@ -178,8 +192,8 @@ const Auth: React.FC = () => {
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-background/5" />
-        <div className="absolute top-1/4 -right-10 w-40 h-40 rounded-full bg-accent/10" />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-white/5" />
+        <div className="absolute top-1/4 -right-10 w-40 h-40 rounded-full bg-white/10" />
       </div>
 
       {/* Right Panel - Auth Form */}
@@ -191,14 +205,16 @@ const Auth: React.FC = () => {
           className="w-full max-w-[400px]"
         >
           {/* Logo */}
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-full bg-foreground flex items-center justify-center">
-              <span className="text-background font-bold text-lg">W</span>
-            </div>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <img 
+              src={logoWebmarcas} 
+              alt="WebMarcas" 
+              className="w-12 h-12 object-contain"
+            />
             <span className="text-xl font-bold text-foreground tracking-tight">WebMarcas</span>
           </div>
 
-          <Card className="border-border shadow-card">
+          <Card className="border-border shadow-lg">
             <CardHeader className="text-center pb-2 pt-6">
               <h2 className="text-xl font-semibold text-foreground">Bem-vindo</h2>
               <p className="text-sm text-muted-foreground">Entre para acessar o sistema</p>
@@ -209,14 +225,14 @@ const Auth: React.FC = () => {
                 <TabsList className="grid w-full grid-cols-2 mb-6 bg-secondary h-11">
                   <TabsTrigger 
                     value="login" 
-                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-soft text-sm font-medium"
+                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm text-sm font-medium"
                   >
                     <LogIn className="w-4 h-4" />
                     Entrar
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup" 
-                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-soft text-sm font-medium"
+                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm text-sm font-medium"
                   >
                     <UserPlus className="w-4 h-4" />
                     Cadastrar
@@ -235,7 +251,7 @@ const Auth: React.FC = () => {
                           id="login-email"
                           type="email"
                           placeholder="seu@email.com"
-                          className="pl-10 h-11 bg-background border-border focus:border-foreground/20 focus:ring-1 focus:ring-foreground/10"
+                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
                           value={loginForm.email}
                           onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                           required
@@ -253,7 +269,7 @@ const Auth: React.FC = () => {
                           id="login-password"
                           type="password"
                           placeholder="••••••••"
-                          className="pl-10 h-11 bg-background border-border focus:border-foreground/20 focus:ring-1 focus:ring-foreground/10"
+                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
                           value={loginForm.password}
                           onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                           required
@@ -263,7 +279,7 @@ const Auth: React.FC = () => {
 
                     <Button 
                       type="submit" 
-                      className="w-full h-11 bg-foreground hover:bg-foreground/90 text-background font-medium gap-2" 
+                      className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium gap-2" 
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -290,7 +306,7 @@ const Auth: React.FC = () => {
                           id="signup-nome"
                           type="text"
                           placeholder="Seu nome"
-                          className="pl-10 h-11 bg-background border-border focus:border-foreground/20 focus:ring-1 focus:ring-foreground/10"
+                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
                           value={signUpForm.nome}
                           onChange={(e) => setSignUpForm({ ...signUpForm, nome: e.target.value })}
                           required
@@ -308,7 +324,7 @@ const Auth: React.FC = () => {
                           id="signup-email"
                           type="email"
                           placeholder="seu@email.com"
-                          className="pl-10 h-11 bg-background border-border focus:border-foreground/20 focus:ring-1 focus:ring-foreground/10"
+                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
                           value={signUpForm.email}
                           onChange={(e) => setSignUpForm({ ...signUpForm, email: e.target.value })}
                           required
@@ -326,7 +342,7 @@ const Auth: React.FC = () => {
                           id="signup-password"
                           type="password"
                           placeholder="••••••••"
-                          className="pl-10 h-11 bg-background border-border focus:border-foreground/20 focus:ring-1 focus:ring-foreground/10"
+                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
                           value={signUpForm.password}
                           onChange={(e) => setSignUpForm({ ...signUpForm, password: e.target.value })}
                           required
@@ -336,7 +352,7 @@ const Auth: React.FC = () => {
 
                     <Button 
                       type="submit" 
-                      className="w-full h-11 bg-foreground hover:bg-foreground/90 text-background font-medium gap-2" 
+                      className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium gap-2" 
                       disabled={isLoading}
                     >
                       {isLoading ? (

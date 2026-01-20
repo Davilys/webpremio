@@ -73,6 +73,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // WebMarcas specific colors
+        webmarcas: {
+          blue: "hsl(200, 100%, 50%)",
+          cyan: "hsl(195, 100%, 50%)",
+          dark: "hsl(220, 20%, 6%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -5,35 +5,35 @@
 @tailwind utilities;
 
 @layer base {
-  /* LIGHT THEME - Clean & Professional */
+  /* LIGHT THEME - WebMarcas Clean */
   :root {
-    --background: 0 0% 99%;
-    --foreground: 240 10% 4%;
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 4%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 4%;
+    --popover-foreground: 215 25% 15%;
 
-    /* Primary - Dark */
-    --primary: 240 10% 4%;
+    /* Primary - WebMarcas Blue */
+    --primary: 200 100% 45%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary - Light gray */
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 10% 20%;
+    --secondary: 210 15% 96%;
+    --secondary-foreground: 215 20% 30%;
 
     /* Muted */
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 5% 45%;
+    --muted: 210 15% 94%;
+    --muted-foreground: 215 15% 50%;
 
-    /* Accent - Purple */
-    --accent: 270 80% 60%;
+    /* Accent - Cyan Blue (WebMarcas) */
+    --accent: 195 100% 50%;
     --accent-foreground: 0 0% 100%;
 
     /* Success - Green */
-    --success: 142 70% 40%;
+    --success: 152 70% 45%;
     --success-foreground: 0 0% 100%;
 
     /* Destructive - Red */
@@ -45,76 +45,76 @@
     --warning-foreground: 0 0% 100%;
 
     /* Borders */
-    --border: 240 5% 90%;
-    --input: 240 5% 90%;
-    --ring: 270 80% 60%;
+    --border: 210 15% 90%;
+    --input: 210 15% 90%;
+    --ring: 200 100% 50%;
 
     --radius: 0.75rem;
 
     /* Sidebar - Light */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 10% 4%;
-    --sidebar-primary: 270 80% 60%;
+    --sidebar-foreground: 215 25% 15%;
+    --sidebar-primary: 200 100% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 10% 4%;
-    --sidebar-border: 240 5% 92%;
-    --sidebar-ring: 270 80% 60%;
+    --sidebar-accent: 210 15% 96%;
+    --sidebar-accent-foreground: 215 25% 15%;
+    --sidebar-border: 210 15% 92%;
+    --sidebar-ring: 200 100% 50%;
   }
 
-  /* DARK THEME - Zionic Style */
+  /* DARK THEME - WebMarcas Premium Dark */
   .dark {
-    --background: 240 10% 4%;
-    --foreground: 0 0% 100%;
+    --background: 220 20% 6%;
+    --foreground: 210 20% 98%;
 
-    --card: 240 10% 7%;
-    --card-foreground: 0 0% 100%;
+    --card: 220 18% 10%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 240 10% 7%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 210 20% 98%;
 
-    /* Primary - White */
-    --primary: 0 0% 100%;
-    --primary-foreground: 240 10% 4%;
+    /* Primary - WebMarcas Blue */
+    --primary: 200 100% 50%;
+    --primary-foreground: 220 20% 6%;
 
     /* Secondary - Dark gray */
-    --secondary: 240 10% 12%;
-    --secondary-foreground: 0 0% 80%;
+    --secondary: 220 18% 14%;
+    --secondary-foreground: 210 15% 75%;
 
     /* Muted */
-    --muted: 240 10% 15%;
-    --muted-foreground: 240 5% 50%;
+    --muted: 220 18% 16%;
+    --muted-foreground: 215 15% 55%;
 
-    /* Accent - Purple/Violet glow */
-    --accent: 270 80% 60%;
+    /* Accent - Cyan Blue (WebMarcas) */
+    --accent: 195 100% 50%;
     --accent-foreground: 0 0% 100%;
 
-    /* Success - Neon Green like Zionic */
-    --success: 142 70% 45%;
+    /* Success - Neon Green */
+    --success: 152 80% 50%;
     --success-foreground: 0 0% 100%;
 
     /* Destructive - Red */
-    --destructive: 0 70% 50%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
     /* Warning */
-    --warning: 38 92% 50%;
+    --warning: 38 92% 55%;
     --warning-foreground: 0 0% 100%;
 
     /* Borders */
-    --border: 240 10% 15%;
-    --input: 240 10% 15%;
-    --ring: 270 80% 60%;
+    --border: 220 18% 18%;
+    --input: 220 18% 18%;
+    --ring: 200 100% 50%;
 
     /* Sidebar - Extra dark */
-    --sidebar-background: 240 10% 3%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 270 80% 60%;
+    --sidebar-background: 220 20% 5%;
+    --sidebar-foreground: 210 15% 95%;
+    --sidebar-primary: 200 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 10% 8%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 240 10% 10%;
-    --sidebar-ring: 270 80% 60%;
+    --sidebar-accent: 220 18% 12%;
+    --sidebar-accent-foreground: 210 15% 95%;
+    --sidebar-border: 220 18% 14%;
+    --sidebar-ring: 200 100% 50%;
   }
 }
 
@@ -136,12 +136,20 @@
 
   /* Selection */
   ::selection {
-    background: hsl(var(--accent) / 0.3);
+    background: hsl(var(--primary) / 0.3);
   }
 }
 
 @layer utilities {
-  /* Zionic Glow Effects */
+  /* WebMarcas Glow Effects */
+  .glow-primary {
+    box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.5);
+  }
+
+  .glow-primary-sm {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.3);
+  }
+
   .glow-accent {
     box-shadow: 0 0 30px -5px hsl(var(--accent) / 0.5);
   }
@@ -155,8 +163,8 @@
   }
 
   .border-glow {
-    border: 1px solid hsl(var(--accent) / 0.3);
-    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.2), inset 0 0 20px -10px hsl(var(--accent) / 0.1);
+    border: 1px solid hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.2), inset 0 0 20px -10px hsl(var(--primary) / 0.1);
   }
 
   .border-glow-success {
@@ -172,8 +180,15 @@
     background-clip: text;
   }
 
+  .text-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(195, 100%, 60%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .text-gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(270, 90%, 70%) 100%);
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(200, 100%, 60%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -193,7 +208,7 @@
   }
 
   .bg-gradient-radial {
-    background: radial-gradient(ellipse at center, hsl(var(--accent) / 0.1) 0%, hsl(var(--background)) 70%);
+    background: radial-gradient(ellipse at center, hsl(var(--primary) / 0.1) 0%, hsl(var(--background)) 70%);
   }
 
   /* Animations */
@@ -233,7 +248,7 @@
 
   .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px -15px hsl(var(--accent) / 0.15);
+    box-shadow: 0 20px 40px -15px hsl(var(--primary) / 0.15);
   }
 
   .hover-glow {
@@ -241,7 +256,7 @@
   }
 
   .hover-glow:hover {
-    box-shadow: 0 0 30px -5px hsl(var(--accent) / 0.4);
+    box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.4);
   }
 
   /* Scrollbar */
@@ -273,11 +288,11 @@
 
 @keyframes pulseGlow {
   0%, 100% { 
-    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.3);
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.3);
     opacity: 1;
   }
   50% { 
-    box-shadow: 0 0 40px -5px hsl(var(--accent) / 0.5);
+    box-shadow: 0 0 40px -5px hsl(var(--primary) / 0.5);
     opacity: 0.8;
   }
 }
@@ -339,7 +354,7 @@
   background: hsl(var(--muted-foreground) / 0.3);
 }
 
-/* Badge styles for Zionic */
+/* Badge styles for WebMarcas */
 .badge-online {
   @apply inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50;
 }

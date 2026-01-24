@@ -2,7 +2,9 @@ import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Wallet, DollarSign, Receipt, TrendingUp } from 'lucide-react';
 import { 
+  DEVEDORES_BONUS_TIER_0,
   DEVEDORES_BONUS_TIER_1,
+  DEVEDORES_BONUS_TIER_1_5,
   DEVEDORES_BONUS_TIER_2,
   DEVEDORES_BONUS_TIER_3
 } from '@/types/database';
@@ -83,8 +85,16 @@ const BonusPanelDevedores = forwardRef<HTMLDivElement, BonusPanelDevedoresProps>
           <p className="text-sm font-medium text-muted-foreground mb-3">Faixas de Premiação por Parcela</p>
           <div className="grid grid-cols-1 gap-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Até R$ 598</span>
+              <span className="text-muted-foreground">Até R$ 199</span>
+              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_0)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">R$ 199 a R$ 398</span>
               <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_1)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">R$ 398 a R$ 598</span>
+              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_1_5)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">R$ 599 a R$ 1.500</span>

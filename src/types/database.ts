@@ -165,20 +165,28 @@ export const calculatePublicacaoBonus = (
 // Valor da Parcela = Valor Resolvido Total ÷ Quantidade de Parcelas Pagas
 //
 // Faixas de premiação por parcela:
-//   - Parcela até R$ 598,00 → R$ 20,00 por parcela
+//   - Parcela até R$ 199,00 → R$ 10,00 por parcela
+//   - Parcela de R$ 199,01 até R$ 398,00 → R$ 20,00 por parcela
+//   - Parcela de R$ 398,01 até R$ 598,00 → R$ 25,00 por parcela
 //   - Parcela de R$ 599,00 até R$ 1.500,00 → R$ 50,00 por parcela
 //   - Parcela acima de R$ 1.500,00 → R$ 100,00 por parcela
 //
 // Premiação Total = Valor da Premiação por Parcela × Quantidade de Parcelas Pagas
 // ==========================================
 
-export const DEVEDORES_BONUS_TIER_1 = 20;  // até R$ 598,00
+export const DEVEDORES_BONUS_TIER_0 = 10;  // até R$ 199,00
+export const DEVEDORES_BONUS_TIER_1 = 20;  // R$ 199,01 até R$ 398,00
+export const DEVEDORES_BONUS_TIER_1_5 = 25; // R$ 398,01 até R$ 598,00
 export const DEVEDORES_BONUS_TIER_2 = 50;  // R$ 599,00 até R$ 1.500,00
 export const DEVEDORES_BONUS_TIER_3 = 100; // acima de R$ 1.500,00
 
 export const getDevedoresBonusPerParcela = (valorParcela: number): number => {
-  if (valorParcela <= 598) {
+  if (valorParcela <= 199) {
+    return DEVEDORES_BONUS_TIER_0; // R$ 10,00
+  } else if (valorParcela <= 398) {
     return DEVEDORES_BONUS_TIER_1; // R$ 20,00
+  } else if (valorParcela <= 598) {
+    return DEVEDORES_BONUS_TIER_1_5; // R$ 25,00
   } else if (valorParcela <= 1500) {
     return DEVEDORES_BONUS_TIER_2; // R$ 50,00
   } else {
@@ -204,8 +212,12 @@ export const calculateDevedoresBonus = (
   const total = bonusPorParcela * quantidadeParcelas;
   
   let faixa = '';
-  if (valorParcela <= 598) {
-    faixa = 'Até R$ 598';
+  if (valorParcela <= 199) {
+    faixa = 'Até R$ 199';
+  } else if (valorParcela <= 398) {
+    faixa = 'R$ 199 a R$ 398';
+  } else if (valorParcela <= 598) {
+    faixa = 'R$ 398 a R$ 598';
   } else if (valorParcela <= 1500) {
     faixa = 'R$ 599 a R$ 1.500';
   } else {

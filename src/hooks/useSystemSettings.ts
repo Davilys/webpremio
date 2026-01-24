@@ -12,12 +12,10 @@ export interface SystemSettings {
   publicacao_bonus_avista: number;
   publicacao_bonus_parcelado: number;
   publicacao_bonus_promocao: number;
-  // Premiação - Devedores
-  devedores_bonus_tier_1: number;
-  devedores_bonus_tier_2: number;
-  devedores_bonus_tier_3: number;
-  devedores_faixa_1_limite: number;
-  devedores_faixa_2_limite: number;
+  // Premiação - Devedores (2 faixas)
+  devedores_faixa_limite: number; // Limite da primeira faixa (ex: 1999)
+  devedores_bonus_faixa_1: number; // Premiação para valores até o limite (ex: R$ 50)
+  devedores_bonus_faixa_2: number; // Premiação para valores acima do limite (ex: R$ 100)
   // Valores de Serviços
   registro_valor_avista: number;
   registro_valor_parcelado: number;
@@ -34,11 +32,9 @@ export const DEFAULT_SETTINGS: SystemSettings = {
   publicacao_bonus_avista: 100,
   publicacao_bonus_parcelado: 50,
   publicacao_bonus_promocao: 50,
-  devedores_bonus_tier_1: 20,
-  devedores_bonus_tier_2: 50,
-  devedores_bonus_tier_3: 100,
-  devedores_faixa_1_limite: 598,
-  devedores_faixa_2_limite: 1500,
+  devedores_faixa_limite: 1999, // Valores até R$ 1.999
+  devedores_bonus_faixa_1: 50,  // R$ 50 para valores de R$ 901 a R$ 1.999
+  devedores_bonus_faixa_2: 100, // R$ 100 para valores de R$ 2.000+
   registro_valor_avista: 699.99,
   registro_valor_parcelado: 1194.00,
   publicacao_valor_avista: 1518.00,

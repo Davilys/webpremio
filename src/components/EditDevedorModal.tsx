@@ -3,13 +3,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format, isSameMonth } from 'date-fns';
-import { Pencil, Lock, DollarSign, Receipt } from 'lucide-react';
+import { Pencil, Lock, Receipt } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Registration, calculateDevedoresBonus } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
@@ -36,7 +35,6 @@ import {
 
 const devedorSchema = z.object({
   nome_cliente: z.string().min(2, 'Nome do cliente é obrigatório').max(200),
-  quantidade_parcelas: z.number().min(1, 'Quantidade de parcelas deve ser pelo menos 1'),
   valor_resolvido: z.number().min(0.01, 'Valor deve ser maior que zero'),
   data_referencia: z.string().min(1, 'Data é obrigatória'),
   observacoes: z.string().max(1000).nullable().optional(),
@@ -69,7 +67,6 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
     resolver: zodResolver(devedorSchema),
     defaultValues: {
       nome_cliente: registration.nome_cliente,
-      quantidade_parcelas: registration.quantidade_parcelas || 1,
       valor_resolvido: registration.valor_resolvido || 0,
       data_referencia: registration.data_referencia,
       observacoes: registration.observacoes || '',
@@ -77,10 +74,7 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
   });
 
   const watchedValues = form.watch();
-  const bonusCalculation = calculateDevedoresBonus(
-    watchedValues.valor_resolvido || 0,
-    watchedValues.quantidade_parcelas || 0
-  );
+  const bonusCalculation = calculateDevedoresBonus(watchedValues.valor_resolvido || 0);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -97,7 +91,6 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
         .from('registrations')
         .update({
           nome_cliente: data.nome_cliente.trim(),
-          quantidade_parcelas: data.quantidade_parcelas,
           valor_resolvido: data.valor_resolvido,
           data_referencia: data.data_referencia,
           observacoes: data.observacoes?.trim() || null,
@@ -174,25 +167,6 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
 
             <FormField
               control={form.control}
-              name="quantidade_parcelas"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Quantidade de Parcelas Pagas *</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min={1}
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="valor_resolvido"
               render={({ field }) => (
                 <FormItem>
@@ -245,7 +219,7 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
             />
 
             {/* Cálculo da Premiação - Preview */}
-            {watchedValues.valor_resolvido > 0 && watchedValues.quantidade_parcelas > 0 && (
+            {watchedValues.valor_resolvido > 0 && (
               <div className="p-4 rounded-lg bg-secondary/50 space-y-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Receipt className="w-4 h-4" />
@@ -254,8 +228,8 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
                 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Valor da Parcela</p>
-                    <p className="font-bold">{formatCurrency(bonusCalculation.valorParcela)}</p>
+                    <p className="text-muted-foreground">Valor da Venda</p>
+                    <p className="font-bold">{formatCurrency(watchedValues.valor_resolvido || 0)}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Faixa</p>
@@ -265,7 +239,7 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
 
                 <div className="pt-3 border-t border-border">
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">Premiação Total</span>
+                    <span className="font-medium">Premiação</span>
                     <span className="text-xl font-bold text-success">
                       {formatCurrency(bonusCalculation.total)}
                     </span>

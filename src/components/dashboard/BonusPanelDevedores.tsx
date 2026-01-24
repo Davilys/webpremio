@@ -2,11 +2,9 @@ import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Wallet, DollarSign, Receipt, TrendingUp } from 'lucide-react';
 import { 
-  DEVEDORES_BONUS_TIER_0,
-  DEVEDORES_BONUS_TIER_1,
-  DEVEDORES_BONUS_TIER_1_5,
-  DEVEDORES_BONUS_TIER_2,
-  DEVEDORES_BONUS_TIER_3
+  DEVEDORES_FAIXA_LIMITE,
+  DEVEDORES_BONUS_FAIXA_1,
+  DEVEDORES_BONUS_FAIXA_2
 } from '@/types/database';
 
 interface BonusPanelDevedoresProps {
@@ -82,37 +80,15 @@ const BonusPanelDevedores = forwardRef<HTMLDivElement, BonusPanelDevedoresProps>
 
         {/* Faixas de Premiação */}
         <div className="space-y-2 p-4 rounded-lg bg-muted/30">
-          <p className="text-sm font-medium text-muted-foreground mb-3">Faixas de Premiação por Parcela</p>
+          <p className="text-sm font-medium text-muted-foreground mb-3">Faixas de Premiação</p>
           <div className="grid grid-cols-1 gap-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Até R$ 199</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_0)}</span>
+              <span className="text-muted-foreground">R$ 901 a R$ {DEVEDORES_FAIXA_LIMITE.toLocaleString('pt-BR')}</span>
+              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_FAIXA_1)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">R$ 199 a R$ 398</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_1)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">R$ 398 a R$ 598</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_1_5)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">R$ 599 a R$ 1.500</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Acima de R$ 1.500</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_TIER_3)}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Total de Parcelas */}
-        <div className="p-4 rounded-lg bg-secondary/50">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-xs text-muted-foreground">Total de Parcelas</p>
-              <p className="text-xl font-bold">{totalParcelas}</p>
+              <span className="text-muted-foreground">Acima de R$ {DEVEDORES_FAIXA_LIMITE.toLocaleString('pt-BR')}</span>
+              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_FAIXA_2)}</span>
             </div>
           </div>
         </div>

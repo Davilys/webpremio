@@ -6,8 +6,9 @@ import { useSystemSettings, SystemSettings } from '@/hooks/useSystemSettings';
 import { useUserPermissions } from '@/hooks/useUserPermissions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Loader2, Save, Settings, DollarSign, Users, Shield, RotateCcw } from 'lucide-react';
+import { Loader2, Save, Settings, DollarSign, Users, Shield, RotateCcw, UserX } from 'lucide-react';
 import BonusSettingsCard from '@/components/settings/BonusSettingsCard';
+import BonusSettingsDevedoresCard from '@/components/settings/BonusSettingsDevedoresCard';
 import ValuesSettingsCard from '@/components/settings/ValuesSettingsCard';
 import UserPermissionsCard from '@/components/settings/UserPermissionsCard';
 import UsersManagementCard from '@/components/settings/UsersManagementCard';
@@ -130,10 +131,14 @@ const Configuracoes: React.FC = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="bonus" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5">
             <TabsTrigger value="bonus" className="gap-2">
               <DollarSign className="w-4 h-4" />
               <span className="hidden sm:inline">Premiação</span>
+            </TabsTrigger>
+            <TabsTrigger value="devedores" className="gap-2">
+              <UserX className="w-4 h-4" />
+              <span className="hidden sm:inline">Devedores</span>
             </TabsTrigger>
             <TabsTrigger value="valores" className="gap-2">
               <DollarSign className="w-4 h-4" />
@@ -157,6 +162,21 @@ const Configuracoes: React.FC = () => {
               </div>
             ) : (
               <BonusSettingsCard
+                settings={localSettings}
+                onSettingChange={handleSettingChange}
+                disabled={isSaving}
+              />
+            )}
+          </TabsContent>
+
+          {/* Tab: Devedores */}
+          <TabsContent value="devedores" className="space-y-6">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <BonusSettingsDevedoresCard
                 settings={localSettings}
                 onSettingChange={handleSettingChange}
                 disabled={isSaving}

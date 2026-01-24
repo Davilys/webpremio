@@ -12,10 +12,17 @@ export interface SystemSettings {
   publicacao_bonus_avista: number;
   publicacao_bonus_parcelado: number;
   publicacao_bonus_promocao: number;
-  // Premiação - Devedores (2 faixas)
-  devedores_faixa_limite: number; // Limite da primeira faixa (ex: 1999)
-  devedores_bonus_faixa_1: number; // Premiação para valores até o limite (ex: R$ 50)
-  devedores_bonus_faixa_2: number; // Premiação para valores acima do limite (ex: R$ 100)
+  // Premiação - Devedores (5 faixas baseadas no valor da parcela)
+  devedores_faixa_1_min: number;   // R$ 199
+  devedores_faixa_1_max: number;   // R$ 397
+  devedores_faixa_2_max: number;   // R$ 597
+  devedores_faixa_3_max: number;   // R$ 999
+  devedores_faixa_4_max: number;   // R$ 1.500
+  devedores_bonus_faixa_1: number; // R$ 10 por parcela
+  devedores_bonus_faixa_2: number; // R$ 25 por parcela
+  devedores_bonus_faixa_3: number; // R$ 50 por parcela
+  devedores_bonus_faixa_4: number; // R$ 75 por parcela
+  devedores_bonus_faixa_5: number; // R$ 100 por parcela
   // Valores de Serviços
   registro_valor_avista: number;
   registro_valor_parcelado: number;
@@ -32,9 +39,18 @@ export const DEFAULT_SETTINGS: SystemSettings = {
   publicacao_bonus_avista: 100,
   publicacao_bonus_parcelado: 50,
   publicacao_bonus_promocao: 50,
-  devedores_faixa_limite: 1999, // Valores até R$ 1.999
-  devedores_bonus_faixa_1: 50,  // R$ 50 para valores de R$ 901 a R$ 1.999
-  devedores_bonus_faixa_2: 100, // R$ 100 para valores de R$ 2.000+
+  // Faixas de Devedores (baseado no valor da parcela)
+  devedores_faixa_1_min: 199,   // Mínimo da faixa 1
+  devedores_faixa_1_max: 397,   // Máximo da faixa 1
+  devedores_faixa_2_max: 597,   // Máximo da faixa 2
+  devedores_faixa_3_max: 999,   // Máximo da faixa 3
+  devedores_faixa_4_max: 1500,  // Máximo da faixa 4
+  devedores_bonus_faixa_1: 10,  // R$ 10 por parcela (R$ 199 a R$ 397)
+  devedores_bonus_faixa_2: 25,  // R$ 25 por parcela (R$ 398 a R$ 597)
+  devedores_bonus_faixa_3: 50,  // R$ 50 por parcela (R$ 598 a R$ 999)
+  devedores_bonus_faixa_4: 75,  // R$ 75 por parcela (R$ 1.000 a R$ 1.500)
+  devedores_bonus_faixa_5: 100, // R$ 100 por parcela (Acima de R$ 1.518)
+  // Valores de Serviços
   registro_valor_avista: 699.99,
   registro_valor_parcelado: 1194.00,
   publicacao_valor_avista: 1518.00,

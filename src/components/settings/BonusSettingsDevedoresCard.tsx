@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Users } from 'lucide-react';
+import { Users, Info } from 'lucide-react';
 import { SystemSettings } from '@/hooks/useSystemSettings';
 
 interface BonusSettingsDevedoresCardProps {
@@ -39,43 +39,120 @@ const BonusSettingsDevedoresCard: React.FC<BonusSettingsDevedoresCardProps> = ({
           <div>
             <CardTitle className="text-lg">Devedores - Faixas de Premiação</CardTitle>
             <CardDescription>
-              Configure os valores de premiação por faixa de valor da venda
+              Configure os valores de premiação por faixa de valor da parcela
             </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Limite da Faixa */}
+        {/* Informação sobre o cálculo */}
+        <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
+          <div className="flex items-start gap-3">
+            <Info className="w-5 h-5 text-primary mt-0.5" />
+            <div className="space-y-2 text-sm">
+              <p className="font-medium text-foreground">Como funciona o cálculo:</p>
+              <p className="text-muted-foreground">
+                <strong>Valor da Parcela</strong> = Valor Resolvido Total ÷ Quantidade de Parcelas Pagas
+              </p>
+              <p className="text-muted-foreground">
+                <strong>Premiação Total</strong> = Premiação por Parcela × Quantidade de Parcelas Pagas
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Faixas de Valor */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-muted-foreground">Limite da Faixa (R$)</h4>
-          <div className="space-y-2">
-            <Label htmlFor="devedores_faixa_limite">
-              Limite Superior da Faixa 1 (até R$)
-              <Badge variant="outline" className="ml-2 text-xs">Divisor</Badge>
-            </Label>
-            <Input
-              id="devedores_faixa_limite"
-              type="number"
-              step="1"
-              min="0"
-              value={settings.devedores_faixa_limite}
-              onChange={handleChange('devedores_faixa_limite')}
-              disabled={disabled}
-            />
-            <p className="text-xs text-muted-foreground">
-              Valores de R$ 901 até {formatCurrency(settings.devedores_faixa_limite)} = Faixa 1
-            </p>
+          <h4 className="text-sm font-medium text-muted-foreground">Limites das Faixas (R$)</h4>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="devedores_faixa_1_min">
+                Valor Mínimo (Faixa 1)
+              </Label>
+              <Input
+                id="devedores_faixa_1_min"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_faixa_1_min}
+                onChange={handleChange('devedores_faixa_1_min')}
+                disabled={disabled}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="devedores_faixa_1_max">
+                Limite Faixa 1 (até R$)
+              </Label>
+              <Input
+                id="devedores_faixa_1_max"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_faixa_1_max}
+                onChange={handleChange('devedores_faixa_1_max')}
+                disabled={disabled}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="devedores_faixa_2_max">
+                Limite Faixa 2 (até R$)
+              </Label>
+              <Input
+                id="devedores_faixa_2_max"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_faixa_2_max}
+                onChange={handleChange('devedores_faixa_2_max')}
+                disabled={disabled}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="devedores_faixa_3_max">
+                Limite Faixa 3 (até R$)
+              </Label>
+              <Input
+                id="devedores_faixa_3_max"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_faixa_3_max}
+                onChange={handleChange('devedores_faixa_3_max')}
+                disabled={disabled}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="devedores_faixa_4_max">
+                Limite Faixa 4 (até R$)
+              </Label>
+              <Input
+                id="devedores_faixa_4_max"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_faixa_4_max}
+                onChange={handleChange('devedores_faixa_4_max')}
+                disabled={disabled}
+              />
+            </div>
           </div>
         </div>
 
         {/* Valores de Premiação por Faixa */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-muted-foreground">Premiação por Faixa (R$)</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h4 className="text-sm font-medium text-muted-foreground">Premiação por Parcela (R$)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="devedores_bonus_faixa_1">
                 Faixa 1
-                <Badge variant="secondary" className="ml-2 text-xs">R$ 901 - {formatCurrency(settings.devedores_faixa_limite)}</Badge>
+                <Badge variant="secondary" className="ml-2 text-xs">
+                  R$ {settings.devedores_faixa_1_min} - R$ {settings.devedores_faixa_1_max}
+                </Badge>
               </Label>
               <Input
                 id="devedores_bonus_faixa_1"
@@ -86,15 +163,14 @@ const BonusSettingsDevedoresCard: React.FC<BonusSettingsDevedoresCardProps> = ({
                 onChange={handleChange('devedores_bonus_faixa_1')}
                 disabled={disabled}
               />
-              <p className="text-xs text-muted-foreground">
-                {formatCurrency(settings.devedores_bonus_faixa_1)} por venda
-              </p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="devedores_bonus_faixa_2">
                 Faixa 2
-                <Badge variant="default" className="ml-2 text-xs">Acima de {formatCurrency(settings.devedores_faixa_limite)}</Badge>
+                <Badge variant="secondary" className="ml-2 text-xs">
+                  R$ {settings.devedores_faixa_1_max + 1} - R$ {settings.devedores_faixa_2_max}
+                </Badge>
               </Label>
               <Input
                 id="devedores_bonus_faixa_2"
@@ -105,25 +181,133 @@ const BonusSettingsDevedoresCard: React.FC<BonusSettingsDevedoresCardProps> = ({
                 onChange={handleChange('devedores_bonus_faixa_2')}
                 disabled={disabled}
               />
-              <p className="text-xs text-muted-foreground">
-                {formatCurrency(settings.devedores_bonus_faixa_2)} por venda
-              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="devedores_bonus_faixa_3">
+                Faixa 3
+                <Badge variant="secondary" className="ml-2 text-xs">
+                  R$ {settings.devedores_faixa_2_max + 1} - R$ {settings.devedores_faixa_3_max}
+                </Badge>
+              </Label>
+              <Input
+                id="devedores_bonus_faixa_3"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_bonus_faixa_3}
+                onChange={handleChange('devedores_bonus_faixa_3')}
+                disabled={disabled}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="devedores_bonus_faixa_4">
+                Faixa 4
+                <Badge variant="secondary" className="ml-2 text-xs">
+                  R$ {settings.devedores_faixa_3_max + 1} - R$ {settings.devedores_faixa_4_max}
+                </Badge>
+              </Label>
+              <Input
+                id="devedores_bonus_faixa_4"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_bonus_faixa_4}
+                onChange={handleChange('devedores_bonus_faixa_4')}
+                disabled={disabled}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="devedores_bonus_faixa_5">
+                Faixa 5
+                <Badge variant="default" className="ml-2 text-xs">
+                  Acima de R$ {settings.devedores_faixa_4_max}
+                </Badge>
+              </Label>
+              <Input
+                id="devedores_bonus_faixa_5"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_bonus_faixa_5}
+                onChange={handleChange('devedores_bonus_faixa_5')}
+                disabled={disabled}
+              />
             </div>
           </div>
         </div>
 
         {/* Resumo das Faixas */}
-        <div className="rounded-lg bg-muted/50 p-4 space-y-2">
+        <div className="rounded-lg bg-muted/50 p-4 space-y-3">
           <h4 className="text-sm font-medium">Resumo das Faixas</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <div className="flex items-center justify-between p-2 rounded bg-background">
-              <span className="text-muted-foreground">R$ 901 - {formatCurrency(settings.devedores_faixa_limite)}</span>
-              <span className="font-medium text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_1)}/venda</span>
+          <div className="grid grid-cols-1 gap-2 text-sm">
+            <div className="flex items-center justify-between p-3 rounded bg-background">
+              <div>
+                <span className="font-medium text-foreground">Faixa 1</span>
+                <span className="text-muted-foreground ml-2">
+                  R$ {settings.devedores_faixa_1_min} a R$ {settings.devedores_faixa_1_max}
+                </span>
+              </div>
+              <span className="font-bold text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_1)}/parcela</span>
             </div>
-            <div className="flex items-center justify-between p-2 rounded bg-background">
-              <span className="text-muted-foreground">Acima de {formatCurrency(settings.devedores_faixa_limite)}</span>
-              <span className="font-medium text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_2)}/venda</span>
+            
+            <div className="flex items-center justify-between p-3 rounded bg-background">
+              <div>
+                <span className="font-medium text-foreground">Faixa 2</span>
+                <span className="text-muted-foreground ml-2">
+                  R$ {settings.devedores_faixa_1_max + 1} a R$ {settings.devedores_faixa_2_max}
+                </span>
+              </div>
+              <span className="font-bold text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_2)}/parcela</span>
             </div>
+            
+            <div className="flex items-center justify-between p-3 rounded bg-background">
+              <div>
+                <span className="font-medium text-foreground">Faixa 3</span>
+                <span className="text-muted-foreground ml-2">
+                  R$ {settings.devedores_faixa_2_max + 1} a R$ {settings.devedores_faixa_3_max}
+                </span>
+              </div>
+              <span className="font-bold text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_3)}/parcela</span>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 rounded bg-background">
+              <div>
+                <span className="font-medium text-foreground">Faixa 4</span>
+                <span className="text-muted-foreground ml-2">
+                  R$ {settings.devedores_faixa_3_max + 1} a R$ {settings.devedores_faixa_4_max}
+                </span>
+              </div>
+              <span className="font-bold text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_4)}/parcela</span>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 rounded bg-background">
+              <div>
+                <span className="font-medium text-foreground">Faixa 5</span>
+                <span className="text-muted-foreground ml-2">
+                  Acima de R$ {settings.devedores_faixa_4_max}
+                </span>
+              </div>
+              <span className="font-bold text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_5)}/parcela</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Exemplo de Cálculo */}
+        <div className="rounded-lg border border-dashed p-4 space-y-2">
+          <h4 className="text-sm font-medium flex items-center gap-2">
+            <Info className="w-4 h-4 text-muted-foreground" />
+            Exemplo Prático
+          </h4>
+          <div className="text-sm text-muted-foreground space-y-1">
+            <p>• Valor resolvido total: <strong>R$ 2.000,00</strong></p>
+            <p>• Parcelas pagas: <strong>4</strong></p>
+            <p>• Valor da parcela: <strong>R$ 500,00</strong> (2.000 ÷ 4)</p>
+            <p>• Faixa aplicada: <strong>Faixa 2</strong> (R$ 398 a R$ 597)</p>
+            <p>• Premiação por parcela: <strong>{formatCurrency(settings.devedores_bonus_faixa_2)}</strong></p>
+            <p>• <strong>Premiação final: {formatCurrency(settings.devedores_bonus_faixa_2 * 4)}</strong> ({settings.devedores_bonus_faixa_2} × 4)</p>
           </div>
         </div>
       </CardContent>

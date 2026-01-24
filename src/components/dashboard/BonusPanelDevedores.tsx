@@ -1,11 +1,7 @@
 import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Wallet, DollarSign, Receipt, TrendingUp } from 'lucide-react';
-import { 
-  DEVEDORES_FAIXA_LIMITE,
-  DEVEDORES_BONUS_FAIXA_1,
-  DEVEDORES_BONUS_FAIXA_2
-} from '@/types/database';
+import { useSystemSettings } from '@/hooks/useSystemSettings';
 
 interface BonusPanelDevedoresProps {
   totalBonus: number;
@@ -24,6 +20,8 @@ const BonusPanelDevedores = forwardRef<HTMLDivElement, BonusPanelDevedoresProps>
   monthYear,
   className,
 }, ref) => {
+  const { settings } = useSystemSettings();
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -80,15 +78,27 @@ const BonusPanelDevedores = forwardRef<HTMLDivElement, BonusPanelDevedoresProps>
 
         {/* Faixas de Premiação */}
         <div className="space-y-2 p-4 rounded-lg bg-muted/30">
-          <p className="text-sm font-medium text-muted-foreground mb-3">Faixas de Premiação</p>
+          <p className="text-sm font-medium text-muted-foreground mb-3">Faixas de Premiação (por parcela)</p>
           <div className="grid grid-cols-1 gap-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">R$ 901 a R$ {DEVEDORES_FAIXA_LIMITE.toLocaleString('pt-BR')}</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_FAIXA_1)}</span>
+              <span className="text-muted-foreground">R$ {settings.devedores_faixa_1_min} a R$ {settings.devedores_faixa_1_max}</span>
+              <span className="font-medium">{formatCurrency(settings.devedores_bonus_faixa_1)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Acima de R$ {DEVEDORES_FAIXA_LIMITE.toLocaleString('pt-BR')}</span>
-              <span className="font-medium">{formatCurrency(DEVEDORES_BONUS_FAIXA_2)}</span>
+              <span className="text-muted-foreground">R$ {settings.devedores_faixa_1_max + 1} a R$ {settings.devedores_faixa_2_max}</span>
+              <span className="font-medium">{formatCurrency(settings.devedores_bonus_faixa_2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">R$ {settings.devedores_faixa_2_max + 1} a R$ {settings.devedores_faixa_3_max}</span>
+              <span className="font-medium">{formatCurrency(settings.devedores_bonus_faixa_3)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">R$ {settings.devedores_faixa_3_max + 1} a R$ {settings.devedores_faixa_4_max}</span>
+              <span className="font-medium">{formatCurrency(settings.devedores_bonus_faixa_4)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Acima de R$ {settings.devedores_faixa_4_max}</span>
+              <span className="font-medium">{formatCurrency(settings.devedores_bonus_faixa_5)}</span>
             </div>
           </div>
         </div>

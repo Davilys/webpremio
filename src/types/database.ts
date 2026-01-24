@@ -161,51 +161,127 @@ export const calculatePublicacaoBonus = (
 // ==========================================
 // REGRAS DE PREMIAÇÃO - DEVEDORES
 // ==========================================
-// Cálculo baseado no valor resolvido:
+// Cálculo baseado no VALOR DA PARCELA:
+//   Valor da Parcela = Valor Resolvido Total ÷ Quantidade de Parcelas Pagas
 //
-// Faixas de premiação:
-//   - Valor de R$ 901,00 até R$ 1.999,00 → R$ 50,00 por venda
-//   - Valor de R$ 2.000,00 ou superior → R$ 100,00 por venda
+// Faixas de premiação (valor da parcela):
+//   Faixa 1: R$ 199,00 a R$ 397,00 → R$ 10,00 por parcela
+//   Faixa 2: R$ 398,00 a R$ 597,00 → R$ 25,00 por parcela
+//   Faixa 3: R$ 598,00 a R$ 999,00 → R$ 50,00 por parcela
+//   Faixa 4: R$ 1.000,00 a R$ 1.500,00 → R$ 75,00 por parcela
+//   Faixa 5: Acima de R$ 1.518,00 → R$ 100,00 por parcela
 //
+// Premiação Total = Premiação por Parcela × Quantidade de Parcelas Pagas
 // ==========================================
 
-export const DEVEDORES_FAIXA_LIMITE = 1999; // Limite superior da faixa 1
-export const DEVEDORES_BONUS_FAIXA_1 = 50;  // R$ 901 a R$ 1.999
-export const DEVEDORES_BONUS_FAIXA_2 = 100; // R$ 2.000+
+// Configurações padrão das faixas (valores default)
+export const DEVEDORES_FAIXA_1_MIN = 199;
+export const DEVEDORES_FAIXA_1_MAX = 397;
+export const DEVEDORES_FAIXA_2_MAX = 597;
+export const DEVEDORES_FAIXA_3_MAX = 999;
+export const DEVEDORES_FAIXA_4_MAX = 1500;
+export const DEVEDORES_FAIXA_5_MIN = 1518;
 
-export const getDevedoresBonusPerVenda = (valorResolvido: number): number => {
-  if (valorResolvido < 901) {
-    return 0; // Valores abaixo de R$ 901 não geram premiação
-  } else if (valorResolvido <= DEVEDORES_FAIXA_LIMITE) {
-    return DEVEDORES_BONUS_FAIXA_1; // R$ 50,00
+export const DEVEDORES_BONUS_FAIXA_1 = 10;  // R$ 199 a R$ 397
+export const DEVEDORES_BONUS_FAIXA_2 = 25;  // R$ 398 a R$ 597
+export const DEVEDORES_BONUS_FAIXA_3 = 50;  // R$ 598 a R$ 999
+export const DEVEDORES_BONUS_FAIXA_4 = 75;  // R$ 1.000 a R$ 1.500
+export const DEVEDORES_BONUS_FAIXA_5 = 100; // Acima de R$ 1.518
+
+// Interface para configurações de devedores
+export interface DevedoresSettings {
+  faixa_1_min: number;
+  faixa_1_max: number;
+  faixa_2_max: number;
+  faixa_3_max: number;
+  faixa_4_max: number;
+  bonus_faixa_1: number;
+  bonus_faixa_2: number;
+  bonus_faixa_3: number;
+  bonus_faixa_4: number;
+  bonus_faixa_5: number;
+}
+
+// Configurações padrão
+export const DEFAULT_DEVEDORES_SETTINGS: DevedoresSettings = {
+  faixa_1_min: DEVEDORES_FAIXA_1_MIN,
+  faixa_1_max: DEVEDORES_FAIXA_1_MAX,
+  faixa_2_max: DEVEDORES_FAIXA_2_MAX,
+  faixa_3_max: DEVEDORES_FAIXA_3_MAX,
+  faixa_4_max: DEVEDORES_FAIXA_4_MAX,
+  bonus_faixa_1: DEVEDORES_BONUS_FAIXA_1,
+  bonus_faixa_2: DEVEDORES_BONUS_FAIXA_2,
+  bonus_faixa_3: DEVEDORES_BONUS_FAIXA_3,
+  bonus_faixa_4: DEVEDORES_BONUS_FAIXA_4,
+  bonus_faixa_5: DEVEDORES_BONUS_FAIXA_5,
+};
+
+// Obtém a premiação por parcela baseada no valor da parcela
+export const getDevedoresBonusPerParcela = (
+  valorParcela: number,
+  settings: DevedoresSettings = DEFAULT_DEVEDORES_SETTINGS
+): number => {
+  if (valorParcela < settings.faixa_1_min) {
+    return 0; // Valores abaixo de R$ 199 não geram premiação
+  } else if (valorParcela <= settings.faixa_1_max) {
+    return settings.bonus_faixa_1; // Faixa 1: R$ 10
+  } else if (valorParcela <= settings.faixa_2_max) {
+    return settings.bonus_faixa_2; // Faixa 2: R$ 25
+  } else if (valorParcela <= settings.faixa_3_max) {
+    return settings.bonus_faixa_3; // Faixa 3: R$ 50
+  } else if (valorParcela <= settings.faixa_4_max) {
+    return settings.bonus_faixa_4; // Faixa 4: R$ 75
   } else {
-    return DEVEDORES_BONUS_FAIXA_2; // R$ 100,00
+    return settings.bonus_faixa_5; // Faixa 5: R$ 100
   }
 };
 
+// Obtém o nome da faixa baseado no valor da parcela
+export const getDevedoresFaixaName = (
+  valorParcela: number,
+  settings: DevedoresSettings = DEFAULT_DEVEDORES_SETTINGS
+): string => {
+  if (valorParcela < settings.faixa_1_min) {
+    return 'Abaixo do mínimo';
+  } else if (valorParcela <= settings.faixa_1_max) {
+    return `Faixa 1 (R$ ${settings.faixa_1_min} - R$ ${settings.faixa_1_max})`;
+  } else if (valorParcela <= settings.faixa_2_max) {
+    return `Faixa 2 (R$ ${settings.faixa_1_max + 1} - R$ ${settings.faixa_2_max})`;
+  } else if (valorParcela <= settings.faixa_3_max) {
+    return `Faixa 3 (R$ ${settings.faixa_2_max + 1} - R$ ${settings.faixa_3_max})`;
+  } else if (valorParcela <= settings.faixa_4_max) {
+    return `Faixa 4 (R$ ${settings.faixa_3_max + 1} - R$ ${settings.faixa_4_max})`;
+  } else {
+    return `Faixa 5 (Acima de R$ ${settings.faixa_4_max})`;
+  }
+};
+
+// Calcula premiação para Devedores (baseado no valor da parcela)
 export const calculateDevedoresBonus = (
   valorResolvido: number,
-  quantidadeParcelas: number = 1
+  quantidadeParcelas: number = 1,
+  settings: DevedoresSettings = DEFAULT_DEVEDORES_SETTINGS
 ): { 
   total: number; 
-  bonusPorVenda: number;
+  bonusPorParcela: number;
+  valorParcela: number;
   faixa: string;
 } => {
-  if (valorResolvido <= 0) {
-    return { total: 0, bonusPorVenda: 0, faixa: '-' };
+  if (valorResolvido <= 0 || quantidadeParcelas <= 0) {
+    return { total: 0, bonusPorParcela: 0, valorParcela: 0, faixa: '-' };
   }
   
-  const bonusPorVenda = getDevedoresBonusPerVenda(valorResolvido);
-  const total = bonusPorVenda; // Premiação única por registro
+  // Valor da Parcela = Valor Resolvido Total ÷ Quantidade de Parcelas Pagas
+  const valorParcela = valorResolvido / quantidadeParcelas;
   
-  let faixa = '';
-  if (valorResolvido < 901) {
-    faixa = 'Abaixo de R$ 901';
-  } else if (valorResolvido <= DEVEDORES_FAIXA_LIMITE) {
-    faixa = 'R$ 901 a R$ 1.999';
-  } else {
-    faixa = 'R$ 2.000+';
-  }
+  // Obtém premiação por parcela baseada no valor da parcela
+  const bonusPorParcela = getDevedoresBonusPerParcela(valorParcela, settings);
   
-  return { total, bonusPorVenda, faixa };
+  // Premiação Total = Premiação por Parcela × Quantidade de Parcelas Pagas
+  const total = bonusPorParcela * quantidadeParcelas;
+  
+  // Nome da faixa
+  const faixa = getDevedoresFaixaName(valorParcela, settings);
+  
+  return { total, bonusPorParcela, valorParcela, faixa };
 };

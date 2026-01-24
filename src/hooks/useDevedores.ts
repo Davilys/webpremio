@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { RegistrationWithProfile, Profile, calculateDevedoresBonus } from '@/types/database';
+import { RegistrationWithProfile, Profile, calculateDevedoresBonus, DevedoresSettings, DEFAULT_DEVEDORES_SETTINGS } from '@/types/database';
 import { startOfMonth, endOfMonth, format } from 'date-fns';
 
 export const useDevedores = (selectedDate: Date, userId?: string) => {
@@ -90,11 +90,12 @@ export const useDevedores = (selectedDate: Date, userId?: string) => {
     }
   }, [fetchDevedores, user?.id]);
 
-  // Calcula o total de premiação para devedores
-  const getTotalBonus = useCallback(() => {
+  // Calcula o total de premiação para devedores (usando configurações padrão)
+  const getTotalBonus = useCallback((settings: DevedoresSettings = DEFAULT_DEVEDORES_SETTINGS) => {
     return devedores.reduce((sum, d) => {
       const valorResolvido = d.valor_resolvido || 0;
-      const bonus = calculateDevedoresBonus(valorResolvido);
+      const quantidadeParcelas = d.quantidade_parcelas || 1;
+      const bonus = calculateDevedoresBonus(valorResolvido, quantidadeParcelas, settings);
       return sum + bonus.total;
     }, 0);
   }, [devedores]);

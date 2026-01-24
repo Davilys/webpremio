@@ -70,25 +70,23 @@ const PremiumStatsCard = forwardRef<HTMLDivElement, PremiumStatsCardProps>(({
         delay: delay,
         ease: [0.16, 1, 0.3, 1]
       }}
-      whileHover={{ 
-        y: -2,
-        transition: { duration: 0.2 }
-      }}
+      whileTap={{ scale: 0.98 }}
       className={cn(
-        "relative bg-card rounded-2xl p-6",
+        "relative bg-card rounded-2xl p-4 sm:p-6",
         "border",
         styles.border,
         "hover:shadow-lg hover:shadow-foreground/5",
-        "transition-shadow duration-300",
+        "transition-all duration-300",
+        "active:scale-[0.99]",
         className
       )}
     >
-      <div className="flex items-start justify-between">
-        <div className="space-y-1">
-          <p className="text-sm font-medium text-muted-foreground">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1 min-w-0 flex-1">
+          <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
             {title}
           </p>
-          <div className="text-3xl font-bold text-foreground tracking-tight">
+          <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
             <AnimatedCounter 
               value={value} 
               formatAsCurrency={formatAsCurrency}
@@ -96,7 +94,7 @@ const PremiumStatsCard = forwardRef<HTMLDivElement, PremiumStatsCardProps>(({
             />
           </div>
           {subtitle && (
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-2">
               {subtitle}
             </p>
           )}
@@ -112,11 +110,11 @@ const PremiumStatsCard = forwardRef<HTMLDivElement, PremiumStatsCardProps>(({
             damping: 15
           }}
           className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center",
+            "w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0",
             styles.iconBg
           )}
         >
-          <Icon className={cn("w-6 h-6", styles.iconColor)} />
+          <Icon className={cn("w-5 h-5 sm:w-6 sm:h-6", styles.iconColor)} />
         </motion.div>
       </div>
 

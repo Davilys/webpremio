@@ -6,7 +6,8 @@ import { format, isSameMonth } from 'date-fns';
 import { Pencil, Lock, Receipt } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Registration, calculateDevedoresBonus } from '@/types/database';
+import { Registration, calculateDevedoresBonus, DevedoresSettings } from '@/types/database';
+import { useSystemSettings } from '@/hooks/useSystemSettings';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,6 +37,7 @@ import {
 const devedorSchema = z.object({
   nome_cliente: z.string().min(2, 'Nome do cliente é obrigatório').max(200),
   valor_resolvido: z.number().min(0.01, 'Valor deve ser maior que zero'),
+  quantidade_parcelas: z.number().min(1, 'Quantidade de parcelas deve ser pelo menos 1'),
   data_referencia: z.string().min(1, 'Data é obrigatória'),
   observacoes: z.string().max(1000).nullable().optional(),
 });
@@ -60,6 +62,7 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { settings } = useSystemSettings();
 
   const canEdit = canEditRegistration(registration.data_referencia);
 
@@ -68,13 +71,33 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
     defaultValues: {
       nome_cliente: registration.nome_cliente,
       valor_resolvido: registration.valor_resolvido || 0,
+      quantidade_parcelas: registration.quantidade_parcelas || 1,
       data_referencia: registration.data_referencia,
       observacoes: registration.observacoes || '',
     },
   });
 
   const watchedValues = form.watch();
-  const bonusCalculation = calculateDevedoresBonus(watchedValues.valor_resolvido || 0);
+
+  // Criar settings para o cálculo
+  const devedoresSettings: DevedoresSettings = {
+    faixa_1_min: settings.devedores_faixa_1_min,
+    faixa_1_max: settings.devedores_faixa_1_max,
+    faixa_2_max: settings.devedores_faixa_2_max,
+    faixa_3_max: settings.devedores_faixa_3_max,
+    faixa_4_max: settings.devedores_faixa_4_max,
+    bonus_faixa_1: settings.devedores_bonus_faixa_1,
+    bonus_faixa_2: settings.devedores_bonus_faixa_2,
+    bonus_faixa_3: settings.devedores_bonus_faixa_3,
+    bonus_faixa_4: settings.devedores_bonus_faixa_4,
+    bonus_faixa_5: settings.devedores_bonus_faixa_5,
+  };
+
+  const bonusCalculation = calculateDevedoresBonus(
+    watchedValues.valor_resolvido || 0,
+    watchedValues.quantidade_parcelas || 1,
+    devedoresSettings
+  );
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -92,6 +115,7 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
         .update({
           nome_cliente: data.nome_cliente.trim(),
           valor_resolvido: data.valor_resolvido,
+          quantidade_parcelas: data.quantidade_parcelas,
           data_referencia: data.data_referencia,
           observacoes: data.observacoes?.trim() || null,
         })
@@ -188,6 +212,27 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
 
             <FormField
               control={form.control}
+              name="quantidade_parcelas"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quantidade de Parcelas Pagas *</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min={1}
+                      step={1}
+                      placeholder="Ex: 4"
+                      {...field}
+                      onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="data_referencia"
               render={({ field }) => (
                 <FormItem>
@@ -219,7 +264,7 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
             />
 
             {/* Cálculo da Premiação - Preview */}
-            {watchedValues.valor_resolvido > 0 && (
+            {watchedValues.valor_resolvido > 0 && watchedValues.quantidade_parcelas > 0 && (
               <div className="p-4 rounded-lg bg-secondary/50 space-y-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Receipt className="w-4 h-4" />
@@ -228,8 +273,16 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
                 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Valor da Venda</p>
+                    <p className="text-muted-foreground">Valor Total</p>
                     <p className="font-bold">{formatCurrency(watchedValues.valor_resolvido || 0)}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Parcelas</p>
+                    <p className="font-bold">{watchedValues.quantidade_parcelas || 1}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Valor da Parcela</p>
+                    <p className="font-bold">{formatCurrency(bonusCalculation.valorParcela)}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Faixa</p>
@@ -237,9 +290,13 @@ export const EditDevedorModal: React.FC<EditDevedorModalProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-border">
+                <div className="pt-3 border-t border-border space-y-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Por parcela</span>
+                    <span className="font-medium">{formatCurrency(bonusCalculation.bonusPorParcela)}</span>
+                  </div>
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">Premiação</span>
+                    <span className="font-medium">Premiação Total</span>
                     <span className="text-xl font-bold text-success">
                       {formatCurrency(bonusCalculation.total)}
                     </span>

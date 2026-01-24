@@ -9,14 +9,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { calculateDevedoresBonus } from '@/types/database';
-import { Wallet, Calendar, User, MessageSquare, DollarSign, Receipt } from 'lucide-react';
+import { calculateDevedoresBonus, DevedoresSettings } from '@/types/database';
+import { useSystemSettings } from '@/hooks/useSystemSettings';
+import { Wallet, Calendar, User, MessageSquare, DollarSign, Receipt, Hash } from 'lucide-react';
 import { z } from 'zod';
 import { format } from 'date-fns';
 
 const devedorSchema = z.object({
   nome_cliente: z.string().min(2, 'Nome do cliente é obrigatório').max(200),
   valor_resolvido: z.number().min(0.01, 'Valor deve ser maior que zero'),
+  quantidade_parcelas: z.number().min(1, 'Quantidade de parcelas deve ser pelo menos 1'),
   data_referencia: z.string().min(1, 'Data é obrigatória'),
   observacoes: z.string().max(1000).optional(),
 });
@@ -27,11 +29,13 @@ const NovoDevedor: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { settings } = useSystemSettings();
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     nome_cliente: '',
     valor_resolvido: 0,
+    quantidade_parcelas: 1,
     data_referencia: format(new Date(), 'yyyy-MM-dd'),
     observacoes: '',
   });
@@ -43,8 +47,26 @@ const NovoDevedor: React.FC = () => {
     }).format(value);
   };
 
+  // Criar settings para o cálculo
+  const devedoresSettings: DevedoresSettings = {
+    faixa_1_min: settings.devedores_faixa_1_min,
+    faixa_1_max: settings.devedores_faixa_1_max,
+    faixa_2_max: settings.devedores_faixa_2_max,
+    faixa_3_max: settings.devedores_faixa_3_max,
+    faixa_4_max: settings.devedores_faixa_4_max,
+    bonus_faixa_1: settings.devedores_bonus_faixa_1,
+    bonus_faixa_2: settings.devedores_bonus_faixa_2,
+    bonus_faixa_3: settings.devedores_bonus_faixa_3,
+    bonus_faixa_4: settings.devedores_bonus_faixa_4,
+    bonus_faixa_5: settings.devedores_bonus_faixa_5,
+  };
+
   // Calcula a premiação em tempo real
-  const bonusCalculation = calculateDevedoresBonus(formData.valor_resolvido);
+  const bonusCalculation = calculateDevedoresBonus(
+    formData.valor_resolvido,
+    formData.quantidade_parcelas,
+    devedoresSettings
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +96,7 @@ const NovoDevedor: React.FC = () => {
         data_referencia: formData.data_referencia,
         observacoes: formData.observacoes?.trim() || null,
         valor_promocao: null,
-        quantidade_parcelas: 1,
+        quantidade_parcelas: formData.quantidade_parcelas,
         valor_resolvido: formData.valor_resolvido,
       });
 
@@ -166,6 +188,28 @@ const NovoDevedor: React.FC = () => {
                 </div>
               </div>
 
+              {/* Quantidade de Parcelas Pagas */}
+              <div className="space-y-2">
+                <Label htmlFor="quantidade_parcelas">Quantidade de Parcelas Pagas *</Label>
+                <div className="relative">
+                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    id="quantidade_parcelas"
+                    type="number"
+                    min={1}
+                    step={1}
+                    placeholder="Ex: 4"
+                    className="pl-10"
+                    value={formData.quantidade_parcelas || ''}
+                    onChange={(e) => setFormData({ ...formData, quantidade_parcelas: parseInt(e.target.value) || 1 })}
+                    required
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Informe quantas parcelas foram pagas pelo cliente
+                </p>
+              </div>
+
               {/* Data do Pagamento */}
               <div className="space-y-2">
                 <Label htmlFor="data_referencia">Data do Pagamento *</Label>
@@ -198,7 +242,7 @@ const NovoDevedor: React.FC = () => {
               </div>
 
               {/* Cálculo da Premiação - Preview */}
-              {formData.valor_resolvido > 0 && (
+              {formData.valor_resolvido > 0 && formData.quantidade_parcelas > 0 && (
                 <div className="p-4 rounded-lg bg-secondary/50 space-y-3">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Receipt className="w-4 h-4" />
@@ -207,8 +251,16 @@ const NovoDevedor: React.FC = () => {
                   
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p className="text-muted-foreground">Valor da Venda</p>
+                      <p className="text-muted-foreground">Valor Total Pago</p>
                       <p className="font-bold">{formatCurrency(formData.valor_resolvido)}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Parcelas Pagas</p>
+                      <p className="font-bold">{formData.quantidade_parcelas}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Valor da Parcela</p>
+                      <p className="font-bold">{formatCurrency(bonusCalculation.valorParcela)}</p>
                     </div>
                     <div>
                       <p className="text-muted-foreground">Faixa</p>
@@ -216,13 +268,20 @@ const NovoDevedor: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-border">
+                  <div className="pt-3 border-t border-border space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-muted-foreground">Premiação por parcela</span>
+                      <span className="font-medium">{formatCurrency(bonusCalculation.bonusPorParcela)}</span>
+                    </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-medium">Premiação</span>
+                      <span className="font-medium">Premiação Total</span>
                       <span className="text-2xl font-bold text-success">
                         {formatCurrency(bonusCalculation.total)}
                       </span>
                     </div>
+                    <p className="text-xs text-muted-foreground">
+                      {formatCurrency(bonusCalculation.bonusPorParcela)} × {formData.quantidade_parcelas} parcelas
+                    </p>
                   </div>
                 </div>
               )}

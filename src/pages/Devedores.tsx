@@ -13,7 +13,8 @@ import PremiumLoader from '@/components/PremiumLoader';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Link } from 'react-router-dom';
-import { calculateDevedoresBonus } from '@/types/database';
+import { calculateDevedoresBonus, DevedoresSettings } from '@/types/database';
+import { useSystemSettings } from '@/hooks/useSystemSettings';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,8 +32,23 @@ const Devedores: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { devedores, loading, refetch, getTotalBonus, getTotalValorResolvido, getTotalParcelas } = useDevedores(selectedDate);
   const { toast } = useToast();
+  const { settings } = useSystemSettings();
 
   const monthYear = format(selectedDate, "MMMM 'de' yyyy", { locale: ptBR });
+
+  // Criar settings para o cálculo
+  const devedoresSettings: DevedoresSettings = {
+    faixa_1_min: settings.devedores_faixa_1_min,
+    faixa_1_max: settings.devedores_faixa_1_max,
+    faixa_2_max: settings.devedores_faixa_2_max,
+    faixa_3_max: settings.devedores_faixa_3_max,
+    faixa_4_max: settings.devedores_faixa_4_max,
+    bonus_faixa_1: settings.devedores_bonus_faixa_1,
+    bonus_faixa_2: settings.devedores_bonus_faixa_2,
+    bonus_faixa_3: settings.devedores_bonus_faixa_3,
+    bonus_faixa_4: settings.devedores_bonus_faixa_4,
+    bonus_faixa_5: settings.devedores_bonus_faixa_5,
+  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -62,6 +78,16 @@ const Devedores: React.FC = () => {
     }).format(value);
   };
 
+  // Calcular total do bônus com as configurações dinâmicas
+  const calculatedTotalBonus = devedores.reduce((sum, dev) => {
+    const bonus = calculateDevedoresBonus(
+      dev.valor_resolvido || 0,
+      dev.quantidade_parcelas || 1,
+      devedoresSettings
+    );
+    return sum + bonus.total;
+  }, 0);
+
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -90,7 +116,7 @@ const Devedores: React.FC = () => {
         {/* Bonus Panel */}
         <div className="max-w-md">
           <BonusPanelDevedores
-            totalBonus={getTotalBonus()}
+            totalBonus={calculatedTotalBonus}
             totalValorResolvido={getTotalValorResolvido()}
             totalParcelas={getTotalParcelas()}
             totalRegistros={devedores.length}
@@ -126,7 +152,13 @@ const Devedores: React.FC = () => {
                       Cliente
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Valor
+                      Valor Total
+                    </th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                      Parcelas
+                    </th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                      Valor/Parcela
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
                       Faixa
@@ -149,7 +181,11 @@ const Devedores: React.FC = () => {
                 </thead>
                 <tbody>
                   {devedores.map((dev) => {
-                    const bonus = calculateDevedoresBonus(dev.valor_resolvido || 0);
+                    const bonus = calculateDevedoresBonus(
+                      dev.valor_resolvido || 0,
+                      dev.quantidade_parcelas || 1,
+                      devedoresSettings
+                    );
                     return (
                       <tr
                         key={dev.id}
@@ -158,6 +194,12 @@ const Devedores: React.FC = () => {
                         <td className="py-3 px-4 text-sm">{dev.nome_cliente}</td>
                         <td className="py-3 px-4 text-sm">
                           {formatCurrency(dev.valor_resolvido || 0)}
+                        </td>
+                        <td className="py-3 px-4 text-sm text-center">
+                          {dev.quantidade_parcelas || 1}
+                        </td>
+                        <td className="py-3 px-4 text-sm">
+                          {formatCurrency(bonus.valorParcela)}
                         </td>
                         <td className="py-3 px-4 text-sm">
                           <span className="px-2 py-1 rounded-full text-xs bg-primary/10 text-primary">

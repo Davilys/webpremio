@@ -12,15 +12,16 @@ import {
 interface Tab {
   id: string;
   label: string;
+  shortLabel: string;
   icon: React.ElementType;
 }
 
 const tabs: Tab[] = [
-  { id: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
-  { id: 'goals', label: 'Metas', icon: Target },
-  { id: 'performance', label: 'Performance', icon: TrendingUp },
-  { id: 'comparison', label: 'Comparativos', icon: BarChart3 },
-  { id: 'history', label: 'Histórico', icon: History },
+  { id: 'overview', label: 'Visão Geral', shortLabel: 'Geral', icon: LayoutDashboard },
+  { id: 'goals', label: 'Metas', shortLabel: 'Metas', icon: Target },
+  { id: 'performance', label: 'Performance', shortLabel: 'Perf.', icon: TrendingUp },
+  { id: 'comparison', label: 'Comparativos', shortLabel: 'Comp.', icon: BarChart3 },
+  { id: 'history', label: 'Histórico', shortLabel: 'Hist.', icon: History },
 ];
 
 interface DashboardTabsProps {
@@ -30,29 +31,31 @@ interface DashboardTabsProps {
 
 const DashboardTabs: React.FC<DashboardTabsProps> = ({ activeTab, onTabChange }) => {
   return (
-    <div className="relative">
-      <div className="flex gap-1 p-1 bg-secondary/50 rounded-xl overflow-x-auto scrollbar-hide border border-border/50">
+    <div className="relative -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="flex gap-1.5 sm:gap-2 p-1.5 bg-secondary/50 rounded-2xl overflow-x-auto scrollbar-hide border border-border/50">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const TabIcon = tab.icon;
           
           return (
-            <button
+            <motion.button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
+              whileTap={{ scale: 0.95 }}
               className={cn(
-                "relative flex items-center gap-2 px-4 py-2.5 rounded-lg",
-                "text-sm font-medium whitespace-nowrap",
-                "transition-colors duration-200",
+                "relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl",
+                "text-xs sm:text-sm font-medium whitespace-nowrap",
+                "transition-colors duration-200 touch-action-manipulation",
+                "min-w-[60px] sm:min-w-0 justify-center sm:justify-start",
                 isActive 
                   ? "text-foreground" 
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground active:text-foreground"
               )}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeTabBg"
-                  className="absolute inset-0 bg-card rounded-lg shadow-sm border border-border/50"
+                  className="absolute inset-0 bg-card rounded-xl shadow-sm border border-border/50"
                   initial={false}
                   transition={{
                     type: 'spring',
@@ -61,11 +64,12 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({ activeTab, onTabChange })
                   }}
                 />
               )}
-              <span className="relative z-10 flex items-center gap-2">
-                <TabIcon className="w-4 h-4" />
+              <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
+                <TabIcon className="w-4 h-4 flex-shrink-0" />
+                <span className="sm:hidden">{tab.shortLabel}</span>
                 <span className="hidden sm:inline">{tab.label}</span>
               </span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

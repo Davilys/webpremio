@@ -121,10 +121,9 @@ const Auth: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Left Panel - Branding (WebMarcas Blue gradient) */}
+    <div className="min-h-screen bg-background flex flex-col lg:flex-row">
+      {/* Left Panel - Branding (Hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 bg-gradient-to-br from-primary via-primary to-accent relative overflow-hidden">
-        {/* Dotted pattern */}
         <div className="absolute inset-0 opacity-10">
           <div 
             className="absolute inset-0" 
@@ -135,33 +134,25 @@ const Auth: React.FC = () => {
           />
         </div>
         
-        {/* Content */}
         <div className="relative z-10 flex flex-col justify-center px-12 xl:px-20 text-primary-foreground">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            {/* Logo */}
             <div className="flex items-center gap-4 mb-10">
-              <img 
-                src={logoWebmarcas} 
-                alt="WebMarcas" 
-                className="w-16 h-16 object-contain"
-              />
+              <img src={logoWebmarcas} alt="WebMarcas" className="w-16 h-16 object-contain" />
               <div>
                 <h2 className="text-2xl font-bold text-white">WebMarcas</h2>
                 <p className="text-white/70 text-sm">Sistema de Premiação</p>
               </div>
             </div>
             
-            {/* Status badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 mb-10">
               <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
               <span className="text-sm font-medium text-white/80">Sistema Online</span>
             </div>
             
-            {/* Main heading */}
             <h1 className="text-4xl xl:text-5xl font-bold tracking-tight leading-[1.1] mb-6 text-white">
               Gerencie sua<br />
               <span className="text-white/80">equipe com eficiência</span>
@@ -171,7 +162,6 @@ const Auth: React.FC = () => {
               Sistema completo de gestão de premiação para sua equipe de vendas.
             </p>
 
-            {/* Benefits list */}
             <div className="space-y-3">
               {benefits.map((benefit, index) => (
                 <motion.div
@@ -191,30 +181,34 @@ const Auth: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Decorative elements */}
         <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-white/5" />
         <div className="absolute top-1/4 -right-10 w-40 h-40 rounded-full bg-white/10" />
       </div>
 
-      {/* Right Panel - Auth Form */}
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+      {/* Right Panel - Auth Form (Full screen on mobile) */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12 min-h-screen lg:min-h-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="w-full max-w-[400px]"
         >
-          {/* Logo */}
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <img 
-              src={logoWebmarcas} 
-              alt="WebMarcas" 
-              className="w-12 h-12 object-contain"
-            />
+          {/* Mobile header with gradient */}
+          <div className="lg:hidden mb-8 text-center">
+            <div className="inline-flex items-center justify-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-primary to-accent mb-4">
+              <img src={logoWebmarcas} alt="WebMarcas" className="w-12 h-12 object-contain" />
+            </div>
+            <h1 className="text-2xl font-bold text-foreground">WebMarcas</h1>
+            <p className="text-sm text-muted-foreground mt-1">Sistema de Premiação</p>
+          </div>
+
+          {/* Desktop logo */}
+          <div className="hidden lg:flex items-center justify-center gap-3 mb-8">
+            <img src={logoWebmarcas} alt="WebMarcas" className="w-12 h-12 object-contain" />
             <span className="text-xl font-bold text-foreground tracking-tight">WebMarcas</span>
           </div>
 
-          <Card className="border-border shadow-lg">
+          <Card className="border-border/50 shadow-lg">
             <CardHeader className="text-center pb-2 pt-6">
               <h2 className="text-xl font-semibold text-foreground">Bem-vindo</h2>
               <p className="text-sm text-muted-foreground">Entre para acessar o sistema</p>
@@ -222,17 +216,17 @@ const Auth: React.FC = () => {
 
             <CardContent className="pt-4 pb-6">
               <Tabs defaultValue="login" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6 bg-secondary h-11">
+                <TabsList className="grid w-full grid-cols-2 mb-6 bg-secondary h-12 rounded-xl p-1">
                   <TabsTrigger 
                     value="login" 
-                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm text-sm font-medium"
+                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm text-sm font-medium rounded-lg h-10"
                   >
                     <LogIn className="w-4 h-4" />
                     Entrar
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup" 
-                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm text-sm font-medium"
+                    className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm text-sm font-medium rounded-lg h-10"
                   >
                     <UserPlus className="w-4 h-4" />
                     Cadastrar
@@ -242,16 +236,14 @@ const Auth: React.FC = () => {
                 <TabsContent value="login" className="space-y-4 mt-0">
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login-email" className="text-sm font-medium text-foreground">
-                        Email
-                      </Label>
+                      <Label htmlFor="login-email" className="text-sm font-medium text-foreground">Email</Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
                           id="login-email"
                           type="email"
                           placeholder="seu@email.com"
-                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
+                          className="pl-11"
                           value={loginForm.email}
                           onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                           required
@@ -260,16 +252,14 @@ const Auth: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="login-password" className="text-sm font-medium text-foreground">
-                        Senha
-                      </Label>
+                      <Label htmlFor="login-password" className="text-sm font-medium text-foreground">Senha</Label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
                           id="login-password"
                           type="password"
                           placeholder="••••••••"
-                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
+                          className="pl-11"
                           value={loginForm.password}
                           onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                           required
@@ -277,19 +267,8 @@ const Auth: React.FC = () => {
                       </div>
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium gap-2" 
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          Entrar
-                          <ArrowRight className="w-4 h-4" />
-                        </>
-                      )}
+                    <Button type="submit" size="xl" className="w-full gap-2" disabled={isLoading}>
+                      {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Entrar <ArrowRight className="w-4 h-4" /></>}
                     </Button>
                   </form>
                 </TabsContent>
@@ -297,72 +276,31 @@ const Auth: React.FC = () => {
                 <TabsContent value="signup" className="space-y-4 mt-0">
                   <form onSubmit={handleSignUp} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-nome" className="text-sm font-medium text-foreground">
-                        Nome Completo
-                      </Label>
+                      <Label htmlFor="signup-nome" className="text-sm font-medium text-foreground">Nome Completo</Label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="signup-nome"
-                          type="text"
-                          placeholder="Seu nome"
-                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
-                          value={signUpForm.nome}
-                          onChange={(e) => setSignUpForm({ ...signUpForm, nome: e.target.value })}
-                          required
-                        />
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input id="signup-nome" type="text" placeholder="Seu nome" className="pl-11" value={signUpForm.nome} onChange={(e) => setSignUpForm({ ...signUpForm, nome: e.target.value })} required />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">
-                        Email
-                      </Label>
+                      <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">Email</Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="signup-email"
-                          type="email"
-                          placeholder="seu@email.com"
-                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
-                          value={signUpForm.email}
-                          onChange={(e) => setSignUpForm({ ...signUpForm, email: e.target.value })}
-                          required
-                        />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input id="signup-email" type="email" placeholder="seu@email.com" className="pl-11" value={signUpForm.email} onChange={(e) => setSignUpForm({ ...signUpForm, email: e.target.value })} required />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">
-                        Senha
-                      </Label>
+                      <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">Senha</Label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="signup-password"
-                          type="password"
-                          placeholder="••••••••"
-                          className="pl-10 h-11 bg-background border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
-                          value={signUpForm.password}
-                          onChange={(e) => setSignUpForm({ ...signUpForm, password: e.target.value })}
-                          required
-                        />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input id="signup-password" type="password" placeholder="••••••••" className="pl-11" value={signUpForm.password} onChange={(e) => setSignUpForm({ ...signUpForm, password: e.target.value })} required />
                       </div>
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium gap-2" 
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          Criar Conta
-                          <ArrowRight className="w-4 h-4" />
-                        </>
-                      )}
+                    <Button type="submit" size="xl" className="w-full gap-2" disabled={isLoading}>
+                      {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Criar Conta <ArrowRight className="w-4 h-4" /></>}
                     </Button>
 
                     <p className="text-xs text-center text-muted-foreground pt-2">

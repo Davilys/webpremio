@@ -5,6 +5,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '@/components/ThemeToggle';
+import MobileBottomNav from '@/components/layout/MobileBottomNav';
+import MobileDrawer from '@/components/layout/MobileDrawer';
 import logoWebmarcas from '@/assets/logo-webmarcas-icon.png';
 import {
   LayoutDashboard,
@@ -17,11 +19,7 @@ import {
   ChevronRight,
   BarChart3,
   PlusCircle,
-  Search,
   Settings,
-  ChevronsRight,
-  Zap,
-  MessageSquare,
   Bell,
   Wallet,
 } from 'lucide-react';
@@ -103,6 +101,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -115,45 +114,24 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Mobile overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Sidebar - WebMarcas style */}
+      {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-72 bg-sidebar border-r border-sidebar-border transform transition-transform duration-300 ease-out lg:translate-x-0 flex flex-col",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 z-50 w-72 bg-sidebar border-r border-sidebar-border transform transition-transform duration-300 ease-out flex flex-col",
+          "hidden lg:flex"
         )}
       >
         {/* Logo Section */}
         <div className="p-5 border-b border-sidebar-border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img 
-                src={logoWebmarcas} 
-                alt="WebMarcas" 
-                className="w-10 h-10 object-contain"
-              />
-              <div>
-                <h1 className="font-bold text-sidebar-foreground text-base tracking-tight">CRM WebMarcas</h1>
-              </div>
+          <div className="flex items-center gap-3">
+            <img 
+              src={logoWebmarcas} 
+              alt="WebMarcas" 
+              className="w-10 h-10 object-contain"
+            />
+            <div>
+              <h1 className="font-bold text-sidebar-foreground text-base tracking-tight">CRM WebMarcas</h1>
             </div>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground"
-            >
-              <X className="w-5 h-5" />
-            </button>
           </div>
         </div>
 
@@ -161,12 +139,12 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
         <div className="px-5 py-3">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-            <span className="text-sm text-sidebar-foreground">CRM WebMarcas</span>
+            <span className="text-sm text-sidebar-foreground">Sistema Online</span>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-2 overflow-y-auto">
+        <nav className="flex-1 px-3 py-2 overflow-y-auto scrollbar-hide">
           <div className="space-y-1">
             {filteredNavItems.map((item, index) => {
               const isActive = location.pathname === item.href;
@@ -179,9 +157,8 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 >
                   <Link
                     to={item.href}
-                    onClick={() => setSidebarOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group relative",
+                      "flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 group relative",
                       isActive
                         ? "bg-primary/10 text-primary"
                         : "text-sidebar-foreground hover:bg-sidebar-accent"
@@ -193,7 +170,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                       </div>
                     )}
                     <span className={cn(
-                      "flex items-center justify-center w-8 h-8 rounded-lg transition-colors",
+                      "flex items-center justify-center w-10 h-10 rounded-xl transition-colors",
                       isActive 
                         ? "bg-primary/20" 
                         : "bg-sidebar-accent",
@@ -226,9 +203,9 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               e.preventDefault();
               handleSignOut();
             }}
-            className="flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+            className="flex items-center gap-3 px-3 py-3 rounded-2xl text-sidebar-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
           >
-            <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-destructive/20">
+            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-destructive/20">
               <LogOut className="w-5 h-5 text-destructive" />
             </span>
             <div className="flex-1">
@@ -245,22 +222,25 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
         </div>
       </aside>
 
+      {/* Mobile Drawer */}
+      <MobileDrawer 
+        isOpen={drawerOpen} 
+        onClose={() => setDrawerOpen(false)}
+        onSignOut={handleSignOut}
+      />
+
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar - WebMarcas style */}
-        <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
-          <div className="flex items-center justify-between px-4 lg:px-8 h-14">
-            {/* Left - Mobile menu + Breadcrumb */}
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setSidebarOpen(true)}
-                className="lg:hidden"
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-              
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-72">
+        {/* Top bar */}
+        <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border">
+          <div className="flex items-center justify-between px-4 lg:px-8 h-16">
+            {/* Left - Logo on mobile */}
+            <div className="flex items-center gap-3">
+              <img 
+                src={logoWebmarcas} 
+                alt="WebMarcas" 
+                className="w-8 h-8 object-contain lg:hidden"
+              />
               <div className="hidden lg:flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">◯</span>
                 <span className="text-muted-foreground">CRM WebMarcas</span>
@@ -268,34 +248,37 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
             </div>
 
             {/* Right - Actions */}
-            <div className="flex items-center gap-3">
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg text-muted-foreground text-sm">
-                <Search className="w-4 h-4" />
-                <span>Buscar...</span>
-                <kbd className="px-1.5 py-0.5 bg-background rounded text-xs">⌘K</kbd>
-              </div>
-              
-              <button className="relative p-2 rounded-lg hover:bg-secondary text-muted-foreground">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <motion.button 
+                whileTap={{ scale: 0.9 }}
+                className="relative p-2.5 rounded-xl bg-secondary/50 active:bg-secondary text-muted-foreground transition-colors"
+              >
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-success rounded-full" />
-              </button>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-success rounded-full" />
+              </motion.button>
               
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full">
                 <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
                 <span className="text-xs font-medium text-muted-foreground">Online</span>
               </div>
               
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold text-sm">
+              <motion.div 
+                whileTap={{ scale: 0.95 }}
+                className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-semibold text-sm shadow-lg"
+              >
                 {profile?.nome?.charAt(0).toUpperCase() || 'U'}
-              </div>
+              </motion.div>
             </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 lg:p-8 overflow-auto bg-background">
+        <main className="flex-1 p-4 lg:p-8 pb-24 lg:pb-8 overflow-auto bg-background">
           {children}
         </main>
+
+        {/* Mobile Bottom Navigation */}
+        <MobileBottomNav onMenuClick={() => setDrawerOpen(true)} />
       </div>
     </div>
   );

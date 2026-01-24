@@ -126,13 +126,7 @@ const Devedores: React.FC = () => {
                       Cliente
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Parcelas
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Valor Total
-                    </th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                      Valor/Parcela
+                      Valor
                     </th>
                     <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
                       Faixa
@@ -155,24 +149,15 @@ const Devedores: React.FC = () => {
                 </thead>
                 <tbody>
                   {devedores.map((dev) => {
-                    const bonus = calculateDevedoresBonus(
-                      dev.valor_resolvido || 0,
-                      dev.quantidade_parcelas || 0
-                    );
+                    const bonus = calculateDevedoresBonus(dev.valor_resolvido || 0);
                     return (
                       <tr
                         key={dev.id}
                         className="border-b border-border/50 hover:bg-muted/30 transition-colors"
                       >
                         <td className="py-3 px-4 text-sm">{dev.nome_cliente}</td>
-                        <td className="py-3 px-4 text-sm font-medium">
-                          {dev.quantidade_parcelas}
-                        </td>
                         <td className="py-3 px-4 text-sm">
                           {formatCurrency(dev.valor_resolvido || 0)}
-                        </td>
-                        <td className="py-3 px-4 text-sm">
-                          {formatCurrency(bonus.valorParcela)}
                         </td>
                         <td className="py-3 px-4 text-sm">
                           <span className="px-2 py-1 rounded-full text-xs bg-primary/10 text-primary">

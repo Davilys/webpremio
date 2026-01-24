@@ -94,8 +94,7 @@ export const useDevedores = (selectedDate: Date, userId?: string) => {
   const getTotalBonus = useCallback(() => {
     return devedores.reduce((sum, d) => {
       const valorResolvido = d.valor_resolvido || 0;
-      const quantidadeParcelas = d.quantidade_parcelas || 0;
-      const bonus = calculateDevedoresBonus(valorResolvido, quantidadeParcelas);
+      const bonus = calculateDevedoresBonus(valorResolvido);
       return sum + bonus.total;
     }, 0);
   }, [devedores]);

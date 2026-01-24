@@ -12,6 +12,12 @@ export interface SystemSettings {
   publicacao_bonus_avista: number;
   publicacao_bonus_parcelado: number;
   publicacao_bonus_promocao: number;
+  // Premiação - Devedores
+  devedores_bonus_tier_1: number;
+  devedores_bonus_tier_2: number;
+  devedores_bonus_tier_3: number;
+  devedores_faixa_1_limite: number;
+  devedores_faixa_2_limite: number;
   // Valores de Serviços
   registro_valor_avista: number;
   registro_valor_parcelado: number;
@@ -28,6 +34,11 @@ export const DEFAULT_SETTINGS: SystemSettings = {
   publicacao_bonus_avista: 100,
   publicacao_bonus_parcelado: 50,
   publicacao_bonus_promocao: 50,
+  devedores_bonus_tier_1: 20,
+  devedores_bonus_tier_2: 50,
+  devedores_bonus_tier_3: 100,
+  devedores_faixa_1_limite: 598,
+  devedores_faixa_2_limite: 1500,
   registro_valor_avista: 699.99,
   registro_valor_parcelado: 1194.00,
   publicacao_valor_avista: 1518.00,

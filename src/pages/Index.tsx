@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
-import TypewriterText from '@/components/TypewriterText';
+import ScrollingText from '@/components/ScrollingText';
 import logoWebmarcas from '@/assets/logo-webmarcas.png';
 
 // Animation variants with proper typing
@@ -234,19 +234,17 @@ const Index: React.FC = () => {
                 Sistema de Premiação
               </motion.h1>
               <motion.span 
-                className="text-4xl md:text-6xl lg:text-7xl font-bold text-gradient block mt-2 min-h-[1.2em]"
+                className="text-4xl md:text-6xl lg:text-7xl font-bold block mt-2 min-h-[1.2em] bg-gradient-to-r from-webmarcas-blue to-webmarcas-cyan bg-clip-text text-transparent"
                 variants={staggerItem}
               >
-                <TypewriterText 
+                <ScrollingText 
                   phrases={[
                     'para Registro de Marcas',
                     'para sua Equipe',
                     'Automatizado',
                     'Inteligente',
                   ]}
-                  typingSpeed={70}
-                  deletingSpeed={35}
-                  pauseDuration={2500}
+                  interval={3000}
                 />
               </motion.span>
             </motion.div>

@@ -130,7 +130,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               className="w-10 h-10 object-contain"
             />
             <div>
-              <h1 className="font-bold text-sidebar-foreground text-base tracking-tight">CRM WebMarcas</h1>
+              <h1 className="font-bold text-sidebar-foreground text-base tracking-tight">WebMarcas Premiação</h1>
             </div>
           </div>
         </div>
@@ -243,7 +243,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               />
               <div className="hidden lg:flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">◯</span>
-                <span className="text-muted-foreground">CRM WebMarcas</span>
+                <span className="text-muted-foreground">WebMarcas Premiação</span>
               </div>
             </div>
 

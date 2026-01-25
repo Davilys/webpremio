@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollingTextProps {
   phrases: string[];
   interval?: number;
   className?: string;
+  style?: CSSProperties;
 }
 
 const ScrollingText: React.FC<ScrollingTextProps> = ({
   phrases,
   interval = 3500,
   className = '',
+  style,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -40,6 +42,7 @@ const ScrollingText: React.FC<ScrollingTextProps> = ({
             opacity: { duration: 0.3 },
           }}
           className={`inline-block ${className}`}
+          style={style}
         >
           {phrases[currentIndex]}
         </motion.span>

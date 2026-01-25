@@ -124,7 +124,7 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onSignOut 
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-card z-50 shadow-2xl flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-card z-50 shadow-2xl flex flex-col h-[100dvh] max-h-[100dvh]"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b border-border">
@@ -165,8 +165,8 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onSignOut 
               </div>
             </div>
 
-            {/* Navigation */}
-            <nav className="flex-1 overflow-y-auto p-3">
+            {/* Navigation - scrollable area */}
+            <nav className="flex-1 min-h-0 overflow-y-auto p-3 overscroll-contain">
               <div className="space-y-1">
                 {filteredNavItems.map((item, index) => {
                   const isActive = location.pathname === item.href;
@@ -220,8 +220,8 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onSignOut 
               </div>
             </nav>
 
-            {/* Footer */}
-            <div className="p-4 border-t border-border space-y-3">
+            {/* Footer - always visible at bottom */}
+            <div className="flex-shrink-0 p-4 border-t border-border space-y-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
               {/* Theme toggle */}
               <div className="flex items-center justify-between px-4 py-3 bg-secondary/50 rounded-2xl">
                 <span className="text-sm font-medium text-foreground">Tema</span>

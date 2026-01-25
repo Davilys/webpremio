@@ -23,7 +23,7 @@ const ScrollingText: React.FC<ScrollingTextProps> = ({
   }, [phrases.length, interval]);
 
   return (
-    <span className={`inline-block relative overflow-hidden ${className}`}>
+    <span className="inline-block relative overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.span
           key={currentIndex}
@@ -39,7 +39,7 @@ const ScrollingText: React.FC<ScrollingTextProps> = ({
             },
             opacity: { duration: 0.3 },
           }}
-          className="inline-block"
+          className={`inline-block ${className}`}
         >
           {phrases[currentIndex]}
         </motion.span>

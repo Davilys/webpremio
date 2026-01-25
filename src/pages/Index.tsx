@@ -237,17 +237,16 @@ const Index: React.FC = () => {
                 className="text-4xl md:text-6xl lg:text-7xl font-bold mt-2 min-h-[1.3em]"
                 variants={staggerItem}
               >
-                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  <ScrollingText 
-                    phrases={[
-                      'aumente a produtividade',
-                      'motive seus colaboradores',
-                      'acompanhe resultados',
-                      'impulsione vendas',
-                    ]}
-                    interval={3500}
-                  />
-                </span>
+                <ScrollingText 
+                  phrases={[
+                    'aumente a produtividade',
+                    'motive seus colaboradores',
+                    'acompanhe resultados',
+                    'impulsione vendas',
+                  ]}
+                  interval={3500}
+                  className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                />
               </motion.div>
             </motion.div>
 

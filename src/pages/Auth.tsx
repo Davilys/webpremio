@@ -388,25 +388,22 @@ const Auth: React.FC = () => {
                 <span style={{ color: '#0F172A' }}>Registre sua marca e</span>
               </GlowingText>
               <br />
-              <span 
-                className="min-h-[1.3em] inline-block"
+              <ScrollingText 
+                phrases={[
+                  'proteja seu negócio',
+                  'garanta exclusividade',
+                  'evite cópias e prejuízos',
+                  'cresça com segurança',
+                ]}
+                interval={3500}
+                className="min-h-[1.3em]"
                 style={{ 
                   background: 'linear-gradient(135deg, #0091FF 0%, #00C2FF 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
                 }}
-              >
-                <ScrollingText 
-                  phrases={[
-                    'proteja seu negócio',
-                    'garanta exclusividade',
-                    'evite cópias e prejuízos',
-                    'cresça com segurança',
-                  ]}
-                  interval={3500}
-                />
-              </span>
+              />
             </motion.h1>
             
             <motion.p 

@@ -231,22 +231,24 @@ const Index: React.FC = () => {
                 className="text-4xl md:text-6xl lg:text-7xl text-foreground tracking-tight leading-tight font-bold"
                 variants={staggerItem}
               >
-                Sistema de Premiação
+                Registre sua marca e
               </motion.h1>
-              <motion.span 
-                className="text-4xl md:text-6xl lg:text-7xl font-bold block mt-2 min-h-[1.2em] bg-gradient-to-r from-webmarcas-blue to-webmarcas-cyan bg-clip-text text-transparent"
+              <motion.div 
+                className="text-4xl md:text-6xl lg:text-7xl font-bold mt-2 min-h-[1.3em]"
                 variants={staggerItem}
               >
-                <ScrollingText 
-                  phrases={[
-                    'para Registro de Marcas',
-                    'para sua Equipe',
-                    'Automatizado',
-                    'Inteligente',
-                  ]}
-                  interval={3000}
-                />
-              </motion.span>
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  <ScrollingText 
+                    phrases={[
+                      'proteja seu negócio',
+                      'garanta exclusividade',
+                      'evite cópias e prejuízos',
+                      'cresça com segurança',
+                    ]}
+                    interval={3500}
+                  />
+                </span>
+              </motion.div>
             </motion.div>
 
             {/* Subtitle */}

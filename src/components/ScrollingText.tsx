@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollingTextProps {
@@ -9,7 +9,7 @@ interface ScrollingTextProps {
 
 const ScrollingText: React.FC<ScrollingTextProps> = ({
   phrases,
-  interval = 3000,
+  interval = 3500,
   className = '',
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,12 +27,17 @@ const ScrollingText: React.FC<ScrollingTextProps> = ({
       <AnimatePresence mode="wait">
         <motion.span
           key={currentIndex}
-          initial={{ y: 40, opacity: 0 }}
+          initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -40, opacity: 0 }}
+          exit={{ y: -20, opacity: 0 }}
           transition={{
-            y: { type: 'spring', stiffness: 300, damping: 30 },
-            opacity: { duration: 0.2 },
+            y: { 
+              type: 'spring', 
+              stiffness: 200, 
+              damping: 25,
+              duration: 0.5 
+            },
+            opacity: { duration: 0.3 },
           }}
           className="inline-block"
         >

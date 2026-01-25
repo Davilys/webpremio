@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { LogIn, UserPlus, Mail, Lock, User, Loader2, ArrowRight, CheckCircle2, Shield, Award, TrendingUp } from 'lucide-react';
 import { z } from 'zod';
 import logoWebmarcas from '@/assets/logo-webmarcas.png';
+import ScrollingText from '@/components/ScrollingText';
 
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -375,7 +376,7 @@ const Auth: React.FC = () => {
               </span>
             </motion.div>
             
-            {/* Main heading with fade-in glow effect */}
+            {/* Main heading with dynamic text effect */}
             <motion.h1 
               className="text-4xl xl:text-5xl 2xl:text-6xl font-bold tracking-tight leading-[1.15] mb-8"
               initial={{ opacity: 0, y: 30 }}
@@ -383,22 +384,28 @@ const Auth: React.FC = () => {
               transition={{ delay: 0.7, duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
             >
               <GlowingText delay={0.8}>
-                <span style={{ color: '#ffffff' }}>Gerencie sua equipe</span>
+                <span style={{ color: '#ffffff' }}>Registre sua marca e</span>
               </GlowingText>
               <br />
-              <GlowingText delay={1.0}>
-                <span 
-                  style={{ 
-                    background: 'linear-gradient(90deg, #00d2ff 0%, #00a8cc 50%, #0088aa 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    textShadow: '0 0 40px rgba(0, 210, 255, 0.3)',
-                  }}
-                >
-                  com eficiência
-                </span>
-              </GlowingText>
+              <span 
+                className="min-h-[1.3em] inline-block"
+                style={{ 
+                  background: 'linear-gradient(90deg, #00d2ff 0%, #00a8cc 50%, #0088aa 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                <ScrollingText 
+                  phrases={[
+                    'proteja seu negócio',
+                    'garanta exclusividade',
+                    'evite cópias e prejuízos',
+                    'cresça com segurança',
+                  ]}
+                  interval={3500}
+                />
+              </span>
             </motion.h1>
             
             <motion.p 

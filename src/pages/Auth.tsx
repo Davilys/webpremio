@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { LogIn, UserPlus, Mail, Lock, User, Loader2, ArrowRight, CheckCircle2, Shield, Award, TrendingUp } from 'lucide-react';
 import { z } from 'zod';
+import TypewriterText from '@/components/TypewriterText';
 import logoWebmarcas from '@/assets/logo-webmarcas-icon.png';
 
 const loginSchema = z.object({
@@ -229,7 +230,7 @@ const Auth: React.FC = () => {
               <span className="text-sm font-medium" style={{ color: '#00f2ff' }}>Sistema Online</span>
             </motion.div>
             
-            {/* Main heading with gradient text */}
+            {/* Main heading with typewriter effect */}
             <motion.h1 
               className="text-4xl xl:text-5xl font-bold tracking-tight leading-[1.15] mb-6"
               initial={{ opacity: 0, y: 20 }}
@@ -239,6 +240,7 @@ const Auth: React.FC = () => {
               <span style={{ color: '#ffffff' }}>Gerencie sua equipe</span>
               <br />
               <span 
+                className="min-h-[1.2em] inline-block"
                 style={{ 
                   background: 'linear-gradient(90deg, #00f2ff 0%, #00c4dc 50%, #0090b0 100%)',
                   WebkitBackgroundClip: 'text',
@@ -246,7 +248,18 @@ const Auth: React.FC = () => {
                   backgroundClip: 'text',
                 }}
               >
-                com eficiência
+                <TypewriterText 
+                  phrases={[
+                    'com eficiência',
+                    'de forma inteligente',
+                    'sem complicação',
+                    'com resultados',
+                  ]}
+                  typingSpeed={70}
+                  deletingSpeed={35}
+                  pauseDuration={2500}
+                  cursorClassName="!bg-[#00f2ff]"
+                />
               </span>
             </motion.h1>
             

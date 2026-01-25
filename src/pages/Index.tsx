@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
+import TypewriterText from '@/components/TypewriterText';
 import logoWebmarcas from '@/assets/logo-webmarcas.png';
 
 // Animation variants with proper typing
@@ -219,7 +220,7 @@ const Index: React.FC = () => {
               </motion.div>
             </motion.div>
 
-            {/* Main Heading with staggered text */}
+            {/* Main Heading with typewriter effect */}
             <motion.div 
               variants={staggerContainer}
               initial="hidden"
@@ -233,10 +234,20 @@ const Index: React.FC = () => {
                 Sistema de Premiação
               </motion.h1>
               <motion.span 
-                className="text-4xl md:text-6xl lg:text-7xl font-bold text-gradient block mt-2"
+                className="text-4xl md:text-6xl lg:text-7xl font-bold text-gradient block mt-2 min-h-[1.2em]"
                 variants={staggerItem}
               >
-                para Registro de Marcas
+                <TypewriterText 
+                  phrases={[
+                    'para Registro de Marcas',
+                    'para sua Equipe',
+                    'Automatizado',
+                    'Inteligente',
+                  ]}
+                  typingSpeed={70}
+                  deletingSpeed={35}
+                  pauseDuration={2500}
+                />
               </motion.span>
             </motion.div>
 

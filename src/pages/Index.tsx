@@ -75,7 +75,7 @@ const Index: React.FC = () => {
 
   const features = [
     { icon: Target, title: "Cálculo Automático de Bônus", desc: "Sistema calcula automaticamente a premiação de cada colaborador" },
-    { icon: FileText, title: "Gestão de Publicações", desc: "Controle total de exigências, recursos e deferimentos" },
+    { icon: FileText, title: "Gestão de Processos", desc: "Controle total de registros, publicações e pendências" },
     { icon: Award, title: "Ranking da Equipe", desc: "Acompanhe a performance individual e coletiva em tempo real" },
     { icon: TrendingUp, title: "Dashboard Completo", desc: "Visualize metas, resultados e evolução com gráficos detalhados" },
     { icon: Users, title: "Multi-usuários", desc: "Cada colaborador tem seu próprio acesso e painel" },
@@ -83,8 +83,8 @@ const Index: React.FC = () => {
   ];
 
   const benefits = [
-    "Registros de marca ilimitados",
-    "Publicações ilimitadas", 
+    "Cadastros ilimitados",
+    "Processos ilimitados", 
     "Usuários ilimitados",
     "Cálculo automático de bônus",
     "Dashboard com gráficos",
@@ -231,7 +231,7 @@ const Index: React.FC = () => {
                 className="text-4xl md:text-6xl lg:text-7xl text-foreground tracking-tight leading-tight font-bold"
                 variants={staggerItem}
               >
-                Registre sua marca e
+                Premie sua equipe e
               </motion.h1>
               <motion.div 
                 className="text-4xl md:text-6xl lg:text-7xl font-bold mt-2 min-h-[1.3em]"
@@ -240,10 +240,10 @@ const Index: React.FC = () => {
                 <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   <ScrollingText 
                     phrases={[
-                      'proteja seu negócio',
-                      'garanta exclusividade',
-                      'evite cópias e prejuízos',
-                      'cresça com segurança',
+                      'aumente a produtividade',
+                      'motive seus colaboradores',
+                      'acompanhe resultados',
+                      'impulsione vendas',
                     ]}
                     interval={3500}
                   />
@@ -258,8 +258,8 @@ const Index: React.FC = () => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
             >
-              Gerencie registros, publicações e calcule bônus da sua equipe automaticamente. 
-              Tudo em um único lugar, sem complicação.
+              Sistema de premiação para empresas de marcas e patentes. 
+              Calcule bônus automaticamente e acompanhe a performance da sua equipe.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -391,15 +391,15 @@ const Index: React.FC = () => {
                 Como Funciona?
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Em 3 passos simples você tem controle total da premiação da sua equipe
+                Em 3 passos simples você tem controle total da bonificação da sua equipe
               </p>
             </motion.div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
-                { step: "01", title: "Cadastre os Registros", desc: "Cada colaborador registra as marcas que fechou, com forma de pagamento e valor" },
+                { step: "01", title: "Cadastre as Vendas", desc: "Cada colaborador registra os processos fechados, com forma de pagamento e valor" },
                 { step: "02", title: "Acompanhe em Tempo Real", desc: "Dashboard mostra evolução, metas e comparativo entre todos os membros da equipe" },
-                { step: "03", title: "Bônus Calculado Automaticamente", desc: "O sistema calcula a premiação de cada um baseado nas regras definidas" },
+                { step: "03", title: "Bônus Calculado Automaticamente", desc: "O sistema calcula a premiação de cada um baseado nas faixas definidas" },
               ].map((item, index) => (
                 <motion.div
                   key={item.step}
@@ -441,7 +441,7 @@ const Index: React.FC = () => {
                 Tudo que Você Precisa
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Recursos pensados para facilitar a gestão de premiações
+                Recursos pensados para facilitar a gestão de bonificações da sua equipe
               </p>
             </motion.div>
 

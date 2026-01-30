@@ -4,6 +4,7 @@ import { useDevedores } from '@/hooks/useDevedores';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import BonusPanelDevedores from '@/components/dashboard/BonusPanelDevedores';
 import MonthSelector from '@/components/dashboard/MonthSelector';
+import UserFilter from '@/components/dashboard/UserFilter';
 import { EditDevedorModal } from '@/components/EditDevedorModal';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -30,7 +31,8 @@ import {
 const Devedores: React.FC = () => {
   const { isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { devedores, loading, refetch, getTotalBonus, getTotalValorResolvido, getTotalParcelas } = useDevedores(selectedDate);
+  const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
+  const { devedores, loading, refetch, getTotalBonus, getTotalValorResolvido, getTotalParcelas } = useDevedores(selectedDate, selectedUserId);
   const { toast } = useToast();
   const { settings } = useSystemSettings();
 
@@ -102,7 +104,13 @@ const Devedores: React.FC = () => {
               Controle de cadastros com valores resolvidos/pagos
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            {isAdmin && (
+              <UserFilter
+                selectedUserId={selectedUserId}
+                onUserChange={setSelectedUserId}
+              />
+            )}
             <MonthSelector currentDate={selectedDate} onChange={setSelectedDate} />
             <Link to="/dashboard/novo-devedor">
               <Button className="gap-2">

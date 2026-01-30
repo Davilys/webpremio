@@ -4,6 +4,7 @@ import { useRegistrations } from '@/hooks/useRegistrations';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import BonusPanelPublicacao from '@/components/dashboard/BonusPanelPublicacao';
 import MonthSelector from '@/components/dashboard/MonthSelector';
+import UserFilter from '@/components/dashboard/UserFilter';
 import { EditRegistrationModal } from '@/components/EditRegistrationModal';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -29,9 +30,11 @@ import {
 const Publicacao: React.FC = () => {
   const { isAdmin } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
   const { registrations, loading, refetch, getQuantityByPayment } = useRegistrations(
     selectedDate,
-    'publicacao'
+    'publicacao',
+    selectedUserId
   );
   const { toast } = useToast();
 
@@ -73,7 +76,13 @@ const Publicacao: React.FC = () => {
               Gerencie suas publicações
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            {isAdmin && (
+              <UserFilter
+                selectedUserId={selectedUserId}
+                onUserChange={setSelectedUserId}
+              />
+            )}
             <MonthSelector currentDate={selectedDate} onChange={setSelectedDate} />
             <Link to="/dashboard/novo">
               <Button className="gap-2">

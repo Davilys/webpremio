@@ -49,11 +49,13 @@ const NovoDevedor: React.FC = () => {
 
   // Criar settings para o cálculo
   const devedoresSettings: DevedoresSettings = {
+    faixa_0_max: settings.devedores_faixa_0_max,
     faixa_1_min: settings.devedores_faixa_1_min,
     faixa_1_max: settings.devedores_faixa_1_max,
     faixa_2_max: settings.devedores_faixa_2_max,
     faixa_3_max: settings.devedores_faixa_3_max,
     faixa_4_max: settings.devedores_faixa_4_max,
+    bonus_faixa_0: settings.devedores_bonus_faixa_0,
     bonus_faixa_1: settings.devedores_bonus_faixa_1,
     bonus_faixa_2: settings.devedores_bonus_faixa_2,
     bonus_faixa_3: settings.devedores_bonus_faixa_3,

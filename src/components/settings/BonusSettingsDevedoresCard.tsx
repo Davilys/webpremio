@@ -66,17 +66,18 @@ const BonusSettingsDevedoresCard: React.FC<BonusSettingsDevedoresCardProps> = ({
           <h4 className="text-sm font-medium text-muted-foreground">Limites das Faixas (R$)</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* NOVA FAIXA 0 */}
             <div className="space-y-2">
-              <Label htmlFor="devedores_faixa_1_min">
-                Valor Mínimo (Faixa 1)
+              <Label htmlFor="devedores_faixa_0_max">
+                Limite Faixa 0 (até R$)
               </Label>
               <Input
-                id="devedores_faixa_1_min"
+                id="devedores_faixa_0_max"
                 type="number"
                 step="1"
                 min="0"
-                value={settings.devedores_faixa_1_min}
-                onChange={handleChange('devedores_faixa_1_min')}
+                value={settings.devedores_faixa_0_max}
+                onChange={handleChange('devedores_faixa_0_max')}
                 disabled={disabled}
               />
             </div>
@@ -147,11 +148,30 @@ const BonusSettingsDevedoresCard: React.FC<BonusSettingsDevedoresCardProps> = ({
         <div className="space-y-4">
           <h4 className="text-sm font-medium text-muted-foreground">Premiação por Parcela (R$)</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* NOVA FAIXA 0 */}
+            <div className="space-y-2">
+              <Label htmlFor="devedores_bonus_faixa_0">
+                Faixa 0
+                <Badge variant="outline" className="ml-2 text-xs">
+                  R$ 1 - R$ {settings.devedores_faixa_0_max}
+                </Badge>
+              </Label>
+              <Input
+                id="devedores_bonus_faixa_0"
+                type="number"
+                step="1"
+                min="0"
+                value={settings.devedores_bonus_faixa_0}
+                onChange={handleChange('devedores_bonus_faixa_0')}
+                disabled={disabled}
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="devedores_bonus_faixa_1">
                 Faixa 1
                 <Badge variant="secondary" className="ml-2 text-xs">
-                  R$ {settings.devedores_faixa_1_min} - R$ {settings.devedores_faixa_1_max}
+                  R$ {settings.devedores_faixa_0_max + 1} - R$ {settings.devedores_faixa_1_max}
                 </Badge>
               </Label>
               <Input
@@ -243,11 +263,22 @@ const BonusSettingsDevedoresCard: React.FC<BonusSettingsDevedoresCardProps> = ({
         <div className="rounded-lg bg-muted/50 p-4 space-y-3">
           <h4 className="text-sm font-medium">Resumo das Faixas</h4>
           <div className="grid grid-cols-1 gap-2 text-sm">
+            {/* NOVA FAIXA 0 */}
+            <div className="flex items-center justify-between p-3 rounded bg-background">
+              <div>
+                <span className="font-medium text-foreground">Faixa 0</span>
+                <span className="text-muted-foreground ml-2">
+                  R$ 1 a R$ {settings.devedores_faixa_0_max}
+                </span>
+              </div>
+              <span className="font-bold text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_0)}/parcela</span>
+            </div>
+            
             <div className="flex items-center justify-between p-3 rounded bg-background">
               <div>
                 <span className="font-medium text-foreground">Faixa 1</span>
                 <span className="text-muted-foreground ml-2">
-                  R$ {settings.devedores_faixa_1_min} a R$ {settings.devedores_faixa_1_max}
+                  R$ {settings.devedores_faixa_0_max + 1} a R$ {settings.devedores_faixa_1_max}
                 </span>
               </div>
               <span className="font-bold text-orange-600">{formatCurrency(settings.devedores_bonus_faixa_1)}/parcela</span>

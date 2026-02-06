@@ -80,8 +80,13 @@ const BonusPanelDevedores = forwardRef<HTMLDivElement, BonusPanelDevedoresProps>
         <div className="space-y-2 p-4 rounded-lg bg-muted/30">
           <p className="text-sm font-medium text-muted-foreground mb-3">Faixas de Premiação (por parcela)</p>
           <div className="grid grid-cols-1 gap-2 text-xs">
+            {/* NOVA FAIXA 0 */}
             <div className="flex justify-between">
-              <span className="text-muted-foreground">R$ {settings.devedores_faixa_1_min} a R$ {settings.devedores_faixa_1_max}</span>
+              <span className="text-muted-foreground">R$ 1 a R$ {settings.devedores_faixa_0_max}</span>
+              <span className="font-medium">{formatCurrency(settings.devedores_bonus_faixa_0)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">R$ {settings.devedores_faixa_0_max + 1} a R$ {settings.devedores_faixa_1_max}</span>
               <span className="font-medium">{formatCurrency(settings.devedores_bonus_faixa_1)}</span>
             </div>
             <div className="flex justify-between">

@@ -175,14 +175,16 @@ export const calculatePublicacaoBonus = (
 // ==========================================
 
 // Configurações padrão das faixas (valores default)
-export const DEVEDORES_FAIXA_1_MIN = 199;
+export const DEVEDORES_FAIXA_0_MAX = 199;   // Nova Faixa 0: R$ 1 a R$ 199
+export const DEVEDORES_FAIXA_1_MIN = 200;   // Faixa 1 agora começa em R$ 200
 export const DEVEDORES_FAIXA_1_MAX = 397;
 export const DEVEDORES_FAIXA_2_MAX = 597;
 export const DEVEDORES_FAIXA_3_MAX = 999;
 export const DEVEDORES_FAIXA_4_MAX = 1500;
 export const DEVEDORES_FAIXA_5_MIN = 1518;
 
-export const DEVEDORES_BONUS_FAIXA_1 = 10;  // R$ 199 a R$ 397
+export const DEVEDORES_BONUS_FAIXA_0 = 10;  // R$ 1 a R$ 199 (NOVA FAIXA)
+export const DEVEDORES_BONUS_FAIXA_1 = 10;  // R$ 200 a R$ 397
 export const DEVEDORES_BONUS_FAIXA_2 = 25;  // R$ 398 a R$ 597
 export const DEVEDORES_BONUS_FAIXA_3 = 50;  // R$ 598 a R$ 999
 export const DEVEDORES_BONUS_FAIXA_4 = 75;  // R$ 1.000 a R$ 1.500
@@ -190,11 +192,13 @@ export const DEVEDORES_BONUS_FAIXA_5 = 100; // Acima de R$ 1.518
 
 // Interface para configurações de devedores
 export interface DevedoresSettings {
+  faixa_0_max: number;   // Nova Faixa 0
   faixa_1_min: number;
   faixa_1_max: number;
   faixa_2_max: number;
   faixa_3_max: number;
   faixa_4_max: number;
+  bonus_faixa_0: number; // Nova Faixa 0
   bonus_faixa_1: number;
   bonus_faixa_2: number;
   bonus_faixa_3: number;
@@ -204,11 +208,13 @@ export interface DevedoresSettings {
 
 // Configurações padrão
 export const DEFAULT_DEVEDORES_SETTINGS: DevedoresSettings = {
+  faixa_0_max: DEVEDORES_FAIXA_0_MAX,   // Nova Faixa 0
   faixa_1_min: DEVEDORES_FAIXA_1_MIN,
   faixa_1_max: DEVEDORES_FAIXA_1_MAX,
   faixa_2_max: DEVEDORES_FAIXA_2_MAX,
   faixa_3_max: DEVEDORES_FAIXA_3_MAX,
   faixa_4_max: DEVEDORES_FAIXA_4_MAX,
+  bonus_faixa_0: DEVEDORES_BONUS_FAIXA_0, // Nova Faixa 0
   bonus_faixa_1: DEVEDORES_BONUS_FAIXA_1,
   bonus_faixa_2: DEVEDORES_BONUS_FAIXA_2,
   bonus_faixa_3: DEVEDORES_BONUS_FAIXA_3,
@@ -221,19 +227,32 @@ export const getDevedoresBonusPerParcela = (
   valorParcela: number,
   settings: DevedoresSettings = DEFAULT_DEVEDORES_SETTINGS
 ): number => {
-  if (valorParcela < settings.faixa_1_min) {
-    return 0; // Valores abaixo de R$ 199 não geram premiação
-  } else if (valorParcela <= settings.faixa_1_max) {
-    return settings.bonus_faixa_1; // Faixa 1: R$ 10
-  } else if (valorParcela <= settings.faixa_2_max) {
-    return settings.bonus_faixa_2; // Faixa 2: R$ 25
-  } else if (valorParcela <= settings.faixa_3_max) {
-    return settings.bonus_faixa_3; // Faixa 3: R$ 50
-  } else if (valorParcela <= settings.faixa_4_max) {
-    return settings.bonus_faixa_4; // Faixa 4: R$ 75
-  } else {
-    return settings.bonus_faixa_5; // Faixa 5: R$ 100
+  // Valores zerados ou negativos não geram premiação
+  if (valorParcela < 1) {
+    return 0;
   }
+  // NOVA FAIXA 0: R$ 1 a R$ 199 (faixa_0_max)
+  if (valorParcela <= settings.faixa_0_max) {
+    return settings.bonus_faixa_0; // R$ 10
+  }
+  // Faixa 1: R$ 200 a R$ 397
+  if (valorParcela <= settings.faixa_1_max) {
+    return settings.bonus_faixa_1; // R$ 10
+  }
+  // Faixa 2: R$ 398 a R$ 597
+  if (valorParcela <= settings.faixa_2_max) {
+    return settings.bonus_faixa_2; // R$ 25
+  }
+  // Faixa 3: R$ 598 a R$ 999
+  if (valorParcela <= settings.faixa_3_max) {
+    return settings.bonus_faixa_3; // R$ 50
+  }
+  // Faixa 4: R$ 1.000 a R$ 1.500
+  if (valorParcela <= settings.faixa_4_max) {
+    return settings.bonus_faixa_4; // R$ 75
+  }
+  // Faixa 5: Acima de R$ 1.500
+  return settings.bonus_faixa_5; // R$ 100
 };
 
 // Obtém o nome da faixa baseado no valor da parcela
@@ -241,19 +260,25 @@ export const getDevedoresFaixaName = (
   valorParcela: number,
   settings: DevedoresSettings = DEFAULT_DEVEDORES_SETTINGS
 ): string => {
-  if (valorParcela < settings.faixa_1_min) {
-    return 'Abaixo do mínimo';
-  } else if (valorParcela <= settings.faixa_1_max) {
-    return `Faixa 1 (R$ ${settings.faixa_1_min} - R$ ${settings.faixa_1_max})`;
-  } else if (valorParcela <= settings.faixa_2_max) {
-    return `Faixa 2 (R$ ${settings.faixa_1_max + 1} - R$ ${settings.faixa_2_max})`;
-  } else if (valorParcela <= settings.faixa_3_max) {
-    return `Faixa 3 (R$ ${settings.faixa_2_max + 1} - R$ ${settings.faixa_3_max})`;
-  } else if (valorParcela <= settings.faixa_4_max) {
-    return `Faixa 4 (R$ ${settings.faixa_3_max + 1} - R$ ${settings.faixa_4_max})`;
-  } else {
-    return `Faixa 5 (Acima de R$ ${settings.faixa_4_max})`;
+  if (valorParcela < 1) {
+    return 'Sem premiação';
   }
+  if (valorParcela <= settings.faixa_0_max) {
+    return `Faixa 0 (R$ 1 - R$ ${settings.faixa_0_max})`;
+  }
+  if (valorParcela <= settings.faixa_1_max) {
+    return `Faixa 1 (R$ ${settings.faixa_0_max + 1} - R$ ${settings.faixa_1_max})`;
+  }
+  if (valorParcela <= settings.faixa_2_max) {
+    return `Faixa 2 (R$ ${settings.faixa_1_max + 1} - R$ ${settings.faixa_2_max})`;
+  }
+  if (valorParcela <= settings.faixa_3_max) {
+    return `Faixa 3 (R$ ${settings.faixa_2_max + 1} - R$ ${settings.faixa_3_max})`;
+  }
+  if (valorParcela <= settings.faixa_4_max) {
+    return `Faixa 4 (R$ ${settings.faixa_3_max + 1} - R$ ${settings.faixa_4_max})`;
+  }
+  return `Faixa 5 (Acima de R$ ${settings.faixa_4_max})`;
 };
 
 // Calcula premiação para Devedores (baseado no valor da parcela)
